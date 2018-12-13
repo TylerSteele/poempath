@@ -1,17 +1,17 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <PoemDisplay title="In a Station of the Metro" author="Ezra Pound" body="The apparition of these faces in the crowd:\nPetals on a wet, black bough ."/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import PoemDisplay from './components/PoemDisplay.vue'
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    PoemDisplay
   }
 }
 </script>
