@@ -31,10 +31,22 @@
         inset-delimiter
       >
         <q-list no-border link inset-delimiter>
-          <q-list-header>Bonus Links</q-list-header>
+          <q-list-header>Dev Links</q-list-header>
           <q-item @click.native="openURL('https://github.com/SteeleTyler/poetically-sense')">
             <q-item-side icon="code" />
-            <q-item-main label="GitHub" sublabel="Poetically Sense"></q-item-main>
+            <q-item-main label="GitHub"></q-item-main>
+          </q-item>
+          <q-item @click.native="openURL('https://quasar-framework.org/components/')">
+            <q-item-side icon="build" />
+            <q-item-main label="Component Docs"></q-item-main>
+          </q-item>
+          <q-item @click.native="openURL('https://quasar-framework.org/quasar-play/android/index.html#/showcase/style-and-identity/color-palette')">
+            <q-item-side icon="color_lens" />
+            <q-item-main label="Color Palette"></q-item-main>
+          </q-item>
+          <q-item @click.native="openURL('https://material.io/tools/icons/?icon=color_lens&style=baseline')">
+            <q-item-side icon="add_to_queue" />
+            <q-item-main label="Material Icons"></q-item-main>
           </q-item>
         </q-list>
       </q-list>
