@@ -30,7 +30,7 @@ export default {
   components: {PoemDisplay},
   data: function() {
     return {
-      poemTitle: "Placeholder Author",
+      poemTitle: "Placeholder Title",
       poemBody: ['First line', 'Second line', 'Third line'],
       poemAuthor: 'Placeholder Author'
     }
