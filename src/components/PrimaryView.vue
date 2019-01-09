@@ -36,7 +36,6 @@ export default {
       poemBody: ['First line', 'Second line', 'Third line'],
       poemAuthor: 'Placeholder Author'
     }
-
   }
 }
 </script>
