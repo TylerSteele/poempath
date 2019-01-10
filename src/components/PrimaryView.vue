@@ -2,7 +2,7 @@
   <div>
     <p id="mainHeading">>> Poetically Sense >></p>
     <p id="subHeading">Poetry you'll enjoy. </p>
-    <PoemDisplay v-bind:title="poemTitle" v-bind:body="poemBody" v-bind:author="poemAuthor"/>
+    <PoemDisplay v-bind:title="this.poem.title" v-bind:body="this.poem.text" v-bind:author="this.poem.author"/>
     <DecisionButtons />
   </div>
 </template>
@@ -29,12 +29,12 @@
   import DecisionButtons from './DecisionButtons'
 export default {
   name: 'PrimaryView',
+  props: {
+    poem: {}
+  },
   components: {DecisionButtons, PoemDisplay},
   data: function() {
     return {
-      poemTitle: "Placeholder Title",
-      poemBody: ['First line', 'Second line', 'Third line'],
-      poemAuthor: 'Placeholder Author'
     }
   }
 }
