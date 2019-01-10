@@ -30,7 +30,7 @@
     margin: 40px 0 0;
   }
   div {
-    margin-left: 20%;
-    margin-right: 20%;
+    margin-left: 10%;
+    margin-right: 10%;
   }
 </style>
