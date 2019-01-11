@@ -1,4 +1,4 @@
-### Log 2: Learning Machine Learning
+### Log 2: Beginning, Front, End
 
 ##### 12/20, Week 3 Update
 
