@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "koa": "^2.6.2",
     "quasar-extras": "^2.0.4",
     "quasar-framework": "^0.17.19",
     "vue": "^2.5.17"

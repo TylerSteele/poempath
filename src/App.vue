@@ -53,7 +53,8 @@
     </q-layout-drawer>
 
     <q-page-container>
-      <PrimaryView v-bind:poem="fetchedPoem"/>
+      <PrimaryView v-if="loggedIn" v-bind:poem="fetchedPoem"/>
+      <UserEntry v-else v-on:loggedIn="logIn"/>
     </q-page-container>
   </q-layout>
 </template>
@@ -61,6 +62,7 @@
 <script>
   import {openURL} from 'quasar'
   import PrimaryView from './components/PrimaryView.vue'
+  import UserEntry from './components/UserEntry'
   import {PoetryAPI} from "./PoetryAPI";
 
   const apiService = new PoetryAPI()
@@ -68,12 +70,14 @@
   export default {
     name: 'LayoutDefault',
     components: {
-      PrimaryView
+      PrimaryView,
+      UserEntry
     },
     data() {
       return {
         leftDrawerOpen: this.$q.platform.is.desktop,
-        fetchedPoem: {}
+        fetchedPoem: {},
+        loggedIn: false
       }
     },
     methods: {
@@ -81,18 +85,17 @@
       getPoem() {
         apiService.getPoem().then((data) => {
           this.fetchedPoem = data
-          alert(JSON.stringify(data))
         })
+      },
+      logIn() {
+        this.loggedIn = true
       }
     },
     mounted() {
       // If the object is empty
       if (Object.keys(this.fetchedPoem).length === 0) {
         // Make the API Request for the poem
-        alert('Making API Request')
         this.getPoem()
-      } else {
-        alert(JSON.stringify(this.fetchedPoem))
       }
     }
   }
