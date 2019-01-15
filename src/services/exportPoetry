@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+MASTER=./allPoems.json
+
+for dir in collection/*
+do 
+	for subdir in "$dir"/*;
+	do
+		cat $PWD/"$subdir" >> $MASTER
+	done
+done
+
