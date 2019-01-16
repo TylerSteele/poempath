@@ -10,6 +10,8 @@ Now that that was done, I wanted to get the database setup on a server. I was ab
 
 In an impulse born of frustration with not knowing what to name my mLab db, I have also made strides in the branding sector. I have purchased the domain rights for *poempath.com* <-- Both "poem path": the path of poems my app provides, and "po-empath": a reference to the predictive nature of the app and a nod to science-fiction mind-readers. If this name sours in my mind, I also picked up *nextpoem.com* for 99 cents (a safer and respectively more boring option).
 
+As for the frontend, I did build out a simple login page. I learn a bit more about using Quasar and have that much less to do for my frontend. Right now, it is simply conditionally rendered if the loggedIn variable is set to false and no routing takes place, but this will likely change. 
+
 #### How Did I Do?
 
 From week 6:
