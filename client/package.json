@@ -1,5 +1,5 @@
 {
-  "name": "poetically-sense",
+  "name": "poetically-sense-client",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,10 +9,9 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "koa": "^2.6.2",
     "quasar-extras": "^2.0.4",
     "quasar-framework": "^0.17.19",
-    "vue": "^2.5.17"
+    "vue": "^2.5.22"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.3.0",
@@ -25,7 +24,7 @@
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
     "vue-cli-plugin-quasar": "^0.17.1",
-    "vue-template-compiler": "^2.5.17"
+    "vue-template-compiler": "^2.5.22"
   },
   "eslintConfig": {
     "root": true,
