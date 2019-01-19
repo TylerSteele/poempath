@@ -84,7 +84,8 @@
       openURL,
       getPoem() {
         apiService.getPoem().then((data) => {
-          this.fetchedPoem = data
+          // For random poem, the return is an array of length 1, not the object itself
+          this.fetchedPoem = data[0]
         })
       },
       logIn() {
