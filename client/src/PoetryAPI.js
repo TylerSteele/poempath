@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = 'https://api.github.com/repos/steeletyler/poetry-collection-api/contents/collection/Robert%20Frost/After%20Apple-Picking.json'
+const API_URL = 'http://localhost:3000/randomPoem'
 
 
 export class PoetryAPI {
@@ -9,9 +9,9 @@ export class PoetryAPI {
   }
 
   getPoem() {
-    // API request for poem from my GitHub. Header allows access to the plain text of the file
+    // API request for a random poem from my local collection
     return axios
-      .get(API_URL, {headers: {Accept: "application/vnd.github.3.raw"}})
+      .get(API_URL)
       .then(response => response.data)
   }
 }
