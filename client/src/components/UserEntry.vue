@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-card class="logInCard">
-      <h3>Welcome to Poetically Sense</h3>
+      <h3>Welcome to poempath</h3>
       <q-field label="User Name" :count="24">
         <q-input v-model="username" maxlength="24"/>
       </q-field>

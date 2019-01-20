@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p id="mainHeading">>> Poetically Sense >></p>
+    <p id="mainHeading">poempath</p>
     <p id="subHeading">Poetry you'll enjoy. </p>
     <PoemDisplay v-bind:title="this.poem.title" v-bind:body="this.poem.text" v-bind:author="this.poem.author"/>
     <DecisionButtons />
