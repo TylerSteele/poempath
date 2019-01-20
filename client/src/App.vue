@@ -15,8 +15,8 @@
         />
 
         <q-toolbar-title>
-          Poetically Sense
-          <div slot="subtitle">Poems you know you'll enjoy</div>
+          poempath
+          <div slot="subtitle">Poetry you'll enjoy</div>
         </q-toolbar-title>
       </q-toolbar>
     </q-layout-header>
