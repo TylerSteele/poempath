@@ -53,8 +53,8 @@
     </q-layout-drawer>
 
     <q-page-container>
-      <PrimaryView v-if="loggedIn" v-bind:poem="fetchedPoem"/>
-      <UserEntry v-else v-on:loggedIn="logIn"/>
+      <!--User Login dynamic rendering. Should replaced with backend routing... v-if="loggedIn"--><PrimaryView  v-bind:poem="fetchedPoem"/>
+      <!--<UserEntry v-else v-on:loggedIn="logIn"/>-->
     </q-page-container>
   </q-layout>
 </template>
