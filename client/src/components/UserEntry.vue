@@ -8,7 +8,7 @@
       <q-field label="Password" :count="100">
         <q-input type="password" v-model="password" maxlength="100"/>
       </q-field>
-      <q-btn @click="passUpLogIn()">Log In</q-btn>
+      <q-btn @click="logIn()">Log In</q-btn>
     </q-card>
   </div>
 </template>
@@ -26,7 +26,7 @@
       }
     },
     methods: {
-      passUpLogIn() {
+      logIn() {
         this.$emit('loggedIn', true)
       }
     }
