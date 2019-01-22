@@ -34,12 +34,12 @@ module.exports = ({router}) => {
       ctx.status = 404
     } else {
       // Use bcrypt to encrypt incoming password and compare to stored one
-      let enteredPassword = await bcrypt.hash(ctx.request.body.password, 10)
-      console.log(enteredPassword)
-      console.log(existingUser.password)
-      if(enteredPassword === existingUser.password){
+      let passwordsMatch = await bcrypt.compare(ctx.request.body.password, existingUser.password)
+      if(passwordsMatch){
+        console.log('Password is correct')
         ctx.body = `Welcome, ${existingUser.username}`
       } else {
+        console.log('Password is incorrect')
         ctx.body = 'Password is incorrect'
         ctx.status = 422
       }
