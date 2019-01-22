@@ -10,10 +10,13 @@
   "license": "ISC",
   "dependencies": {
     "@koa/cors": "^2.2.3",
+    "bcrypt": "^3.0.3",
     "koa": "^2.6.2",
     "koa-body": "^4.0.6",
+    "koa-bodyparser": "^4.2.1",
     "koa-json": "^2.0.2",
     "koa-jwt": "^3.5.1",
+    "koa-logger": "^3.2.0",
     "koa-router": "^7.4.0",
     "mongodb": "^3.1.12"
   },
