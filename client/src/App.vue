@@ -18,6 +18,7 @@
           poempath
           <div slot="subtitle">Poetry you'll enjoy</div>
         </q-toolbar-title>
+        <router-link tag="q-btn" v-if="loggedIn" to="/welcome" v-on:click.native="setUserStatus(false)" replace>Log Out</router-link>
       </q-toolbar>
     </q-layout-header>
 
@@ -53,26 +54,19 @@
     </q-layout-drawer>
 
     <q-page-container>
-      <PrimaryView  v-if="loggedIn" v-bind:poem="fetchedPoem"/>
-      <UserEntry v-else v-on:loggedIn="logIn"/>
+      <router-view @loggedIn="setUserStatus" :poem="fetchedPoem"/>
     </q-page-container>
   </q-layout>
 </template>
 
 <script>
   import {openURL} from 'quasar'
-  import PrimaryView from './components/PrimaryView.vue'
-  import UserEntry from './components/UserEntry'
   import {PoetryAPI} from "./services/api/PoetryAPI"
 
   const apiService = new PoetryAPI()
 
   export default {
     name: 'LayoutDefault',
-    components: {
-      PrimaryView,
-      UserEntry
-    },
     data() {
       return {
         leftDrawerOpen: this.$q.platform.is.desktop,
@@ -88,14 +82,16 @@
           this.fetchedPoem = data[0]
         })
       },
-      logIn() {
-        this.loggedIn = true
+      setUserStatus(isLoggedIn) {
+        this.loggedIn = isLoggedIn
       }
     },
     mounted() {
-      // If the object is empty
+      if(!this.loggedIn){
+        this.$router.replace({name: "welcome"})
+      }
       if (Object.keys(this.fetchedPoem).length === 0) {
-        // Make the API Request for the poem
+        // Make the API Request for the poem this logic will change when connected to the NN
         this.getPoem()
       }
     }

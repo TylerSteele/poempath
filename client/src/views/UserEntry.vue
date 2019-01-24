@@ -68,7 +68,7 @@
               this.passwordErrorLabel = 'Required'
               this.logInLoading = false
               this.$emit('loggedIn', true)
-              this.$router.replace({name: "secure"})
+              this.$router.replace({name: "home"})
             }
             if (data.message === 'incorrectPassword') {
               this.passwordError = true
@@ -140,7 +140,7 @@
               this.passwordErrorLabel = 'Required'
               this.signUpLoading = false
               this.$emit('loggedIn', true)
-              this.$router.replace({name: "secure"})
+              this.$router.replace({name: "home"})
             }
             if (data.message === 'usernameTaken') {
               this.usernameError = true

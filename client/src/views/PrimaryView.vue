@@ -25,8 +25,8 @@
 </style>
 
 <script>
-  import PoemDisplay from './PoemDisplay'
-  import DecisionButtons from './DecisionButtons'
+  import PoemDisplay from '../components/PoemDisplay'
+  import DecisionButtons from '../components/DecisionButtons'
 export default {
   name: 'PrimaryView',
   props: {
