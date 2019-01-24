@@ -53,8 +53,8 @@
     </q-layout-drawer>
 
     <q-page-container>
-      <!--User Login dynamic rendering. Should replaced with backend routing... v-if="loggedIn"--><PrimaryView  v-bind:poem="fetchedPoem"/>
-      <!--<UserEntry v-else v-on:loggedIn="logIn"/>-->
+      <PrimaryView  v-if="loggedIn" v-bind:poem="fetchedPoem"/>
+      <UserEntry v-else v-on:loggedIn="logIn"/>
     </q-page-container>
   </q-layout>
 </template>
@@ -63,7 +63,7 @@
   import {openURL} from 'quasar'
   import PrimaryView from './components/PrimaryView.vue'
   import UserEntry from './components/UserEntry'
-  import {PoetryAPI} from "./PoetryAPI";
+  import {PoetryAPI} from "./services/api/PoetryAPI"
 
   const apiService = new PoetryAPI()
 
