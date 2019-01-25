@@ -8,7 +8,7 @@ export class PoetryAPI {
 
   }
 
-  getPoem() {
+  static getPoem() {
     // API request for a random poem from my local collection
     return axios
       .get(API_URL)

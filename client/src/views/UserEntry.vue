@@ -26,9 +26,7 @@
 
 <script>
   import QBtn from "quasar-framework/src/components/btn/QBtn"
-  import {UserAPI} from "../services/api/UserAPI"
-
-  const apiService = new UserAPI()
+  import { UserAPI } from "../services/api/UserAPI"
 
   export default {
     name: "UserEntry",
@@ -51,7 +49,7 @@
         this.logInLoading = true
         if (this.username !== '' && this.password !== '') {
 
-          apiService.validateUser(this.username, this.password).then((data) => {
+          UserAPI.validateUser(this.username, this.password).then((data) => {
             if (data.message === 'accessGranted') {
               if (this.currentNotification)
                 this.currentNotification()
@@ -68,6 +66,7 @@
               this.passwordErrorLabel = 'Required'
               this.logInLoading = false
               this.$emit('loggedIn', true)
+              this.$emit('username', this.username)
               this.$router.replace({name: "home"})
             }
             if (data.message === 'incorrectPassword') {
@@ -123,7 +122,7 @@
         this.signUpLoading = true
         if (this.username !== '' && this.password !== '') {
 
-          apiService.createUser(this.username, this.password).then((data) => {
+          UserAPI.createUser(this.username, this.password).then((data) => {
             if (data.message === 'userAdded') {
               if (this.currentNotification)
                 this.currentNotification()
@@ -140,6 +139,7 @@
               this.passwordErrorLabel = 'Required'
               this.signUpLoading = false
               this.$emit('loggedIn', true)
+              this.$emit('username', this.username)
               this.$router.replace({name: "home"})
             }
             if (data.message === 'usernameTaken') {
@@ -184,7 +184,7 @@
 <style scoped>
 
   .logInCard {
-    margin: 20%;
+    margin: 10% 20%;
     padding: 5%;
   }
 

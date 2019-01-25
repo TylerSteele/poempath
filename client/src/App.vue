@@ -18,7 +18,12 @@
           poempath
           <div slot="subtitle">Poetry you'll enjoy</div>
         </q-toolbar-title>
-        <router-link tag="q-btn" v-if="loggedIn" to="/welcome" v-on:click.native="setUserStatus(false)" replace>Log Out</router-link>
+        <q-toolbar-title v-if="loggedIn">
+          Hey, {{username}}
+        </q-toolbar-title>
+        <router-link tag="q-btn" v-if="loggedIn" to="/welcome"
+                     v-on:click.native="setUserStatus(false)" replace>Log Out
+        </router-link>
       </q-toolbar>
     </q-layout-header>
 
@@ -54,16 +59,15 @@
     </q-layout-drawer>
 
     <q-page-container>
-      <router-view @loggedIn="setUserStatus" :poem="fetchedPoem"/>
+      <router-view @loggedIn="setUserStatus" @username="setUsername"
+                   :poem="fetchedPoem" :username="username"/>
     </q-page-container>
   </q-layout>
 </template>
 
 <script>
-  import {openURL} from 'quasar'
-  import {PoetryAPI} from "./services/api/PoetryAPI"
-
-  const apiService = new PoetryAPI()
+  import { openURL } from 'quasar'
+  import { PoetryAPI } from "./services/api/PoetryAPI"
 
   export default {
     name: 'LayoutDefault',
@@ -71,27 +75,31 @@
       return {
         leftDrawerOpen: this.$q.platform.is.desktop,
         fetchedPoem: {},
-        loggedIn: false
+        loggedIn: false,
+        username: ''
       }
     },
     methods: {
       openURL,
       getPoem() {
-        apiService.getPoem().then((data) => {
+        PoetryAPI.getPoem().then((data) => {
           // For random poem, the return is an array of length 1, not the object itself
           this.fetchedPoem = data[0]
         })
       },
       setUserStatus(isLoggedIn) {
         this.loggedIn = isLoggedIn
+      },
+      setUsername(newUsername) {
+        this.username = newUsername
       }
     },
     mounted() {
-      if(!this.loggedIn){
+      if (!this.loggedIn) {
         this.$router.replace({name: "welcome"})
       }
       if (Object.keys(this.fetchedPoem).length === 0) {
-        // Make the API Request for the poem this logic will change when connected to the NN
+        // Make the API Request for the poem - this logic will change when connected to the NN
         this.getPoem()
       }
     }

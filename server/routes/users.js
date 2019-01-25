@@ -30,7 +30,8 @@ module.exports = ({router}) => {
       // Use bcrypt to encrypt the password and store it with the new user
       app.users.insertOne({
         username: ctx.request.body.username,
-        password: await bcrypt.hash(ctx.request.body.password, 10)
+        password: await bcrypt.hash(ctx.request.body.password, 10),
+        status: 'new'
       })
       ctx.body = {message: 'userAdded'}
     }
@@ -80,6 +81,19 @@ module.exports = ({router}) => {
       app.users.deleteOne({_id: ObjectId(ctx.params.userID)})
       console.log(`Username: ${userToDelete.username} deleted`)
       ctx.body = `Successfully deleted user ${userToDelete.username}`
+    }
+  })
+
+  // This should be more secure (beyond the scope of the project)
+  router.get('/users', async (ctx) => {
+    let user = await app.users.findOne({username: ctx.query.username})
+    if(user){
+      delete user.password
+      ctx.body = user
+      ctx.status = 200
+    } else {
+      ctx.body = { status: 'User not found' }
+      ctx.status = 404
     }
   })
 
