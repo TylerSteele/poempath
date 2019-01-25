@@ -19,9 +19,15 @@ While I was hoping to accomplish more today, I had my wisdom teeth extracted thi
 #### How Did I Do?
 
 From week 6:
-- Have the database configured completely for basic app functionality and (*stretch goal*) host the database on a server. **Complete**
-- Begin building the backend- at least have it installed and configured. **Complete (the "at least" portion, anyway)**
-- Flesh out the frontend to the point of being able to cycle through multiple poems that are retrieved from the database. Do not spend time on aesthetics. **Not done, but I did add a login page. *According to web development fundamentals, backend talks to the db and the frontend talks to the backend. Who knew?!*** 
+- Have the database configured completely for basic app functionality and (*stretch goal*) host the database on a server. 
+    
+    **Complete**
+- Begin building the backend- at least have it installed and configured. 
+
+    **Complete (the "at least" portion, anyway)**
+- Flesh out the frontend to the point of being able to cycle through multiple poems that are retrieved from the database. Do not spend time on aesthetics. 
+
+    **Not done, but I did add a login page. *According to web development fundamentals, backend talks to the db and the frontend talks to the backend. Who knew?!*** 
 
 #### Goals for Week 8
 
