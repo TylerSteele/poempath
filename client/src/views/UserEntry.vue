@@ -1,36 +1,47 @@
 <template>
   <div>
-    <q-card class="logInCard">
-      <h3>Welcome to poempath</h3>
-      <q-field :error="usernameError" :error-label="usernameErrorLabel"
-               label="User Name" :count="24">
-        <q-input @focus="usernameError = false" v-model="username"
-                 maxlength="24"/>
-      </q-field>
-      <q-field :error="passwordError" :error-label="passwordErrorLabel"
-               label="Password" :count="100">
-        <q-input @focus="passwordError = false" type="password"
-                 v-model="password" maxlength="100"/>
-      </q-field>
-      <q-btn @click="logIn" :loading="logInLoading" class="logInButton">
-        <q-spinner slot="loading"/>
-        Log In
-      </q-btn>
-      <q-btn @click="signUp" :loading="signUpLoading" class="signUpButton">
-        <q-spinner slot="loading"/>
-        Sign Up
-      </q-btn>
+    <q-card class="card">
+      <q-tabs v-model="activeTab" underline-color="secondary" color="primary" class="tabRow">
+        <q-tab slot="title" name="logInTab">Log In</q-tab>
+        <q-tab slot="title" name="signUpTab">Sign Up</q-tab>
+      </q-tabs>
+      <div class="cardContents">
+        <div class="cardTitle">Welcome to poempath</div>
+        <q-field :error="usernameError" :error-label="usernameErrorLabel"
+                 label="User Name" :count="24">
+          <q-input @focus="usernameError = false" @keyup.enter="simulateSubmit"
+                   v-model="username"
+                   maxlength="24"/>
+        </q-field>
+        <q-field :error="passwordError" :error-label="passwordErrorLabel"
+                 label="Password" :count="100">
+          <q-input @focus="passwordError = false" @keyup.enter="simulateSubmit"
+                   type="password"
+                   v-model="password" maxlength="100"/>
+        </q-field>
+        <q-btn @click="logIn" v-if="isActiveTab('logInTab')"
+               :loading="logInLoading" color="secondary" class="logInButton">
+          <q-spinner slot="loading"/>
+          Log In
+        </q-btn>
+        <q-btn @click="signUp" v-if="isActiveTab('signUpTab')"
+               :loading="signUpLoading" color="secondary" class="signUpButton">
+          <q-spinner slot="loading"/>
+          Sign Up
+        </q-btn>
+      </div>
     </q-card>
   </div>
 </template>
 
 <script>
   import QBtn from "quasar-framework/src/components/btn/QBtn"
-  import { UserAPI } from "../services/api/UserAPI"
+  import QTab from "quasar-framework/src/components/tab/QTab"
+  import {UserAPI} from "../services/api/UserAPI"
 
   export default {
     name: "UserEntry",
-    components: {QBtn},
+    components: {QBtn, QTab},
     data() {
       return {
         username: '',
@@ -41,10 +52,26 @@
         passwordErrorLabel: 'Required',
         logInLoading: false,
         signUpLoading: false,
-        currentNotification: null
+        currentNotification: null,
+        activeTab: 'logInTab'
       }
     },
     methods: {
+      isActiveTab(tab) {
+        return this.activeTab === tab
+      },
+      simulateSubmit() {
+        switch (this.activeTab) {
+          case 'logInTab':
+            this.logIn()
+            break
+          case 'signUpTab':
+            this.signUp()
+            break
+          default:
+            break
+        }
+      },
       logIn() {
         this.logInLoading = true
         if (this.username !== '' && this.password !== '') {
@@ -181,21 +208,29 @@
   }
 </script>
 
-<style scoped>
+<style lang="stylus" scoped>
+  @import '~variables'
 
-  .logInCard {
-    margin: 10% 20%;
-    padding: 5%;
-  }
+  .card
+    margin 10% 20%
+    border-radius 5px
+    background-color $neutral
 
-  .logInButton {
-    margin-top: 3%;
-  }
+  .cardContents
+    padding 10%
 
-  .signUpButton {
-    float: right;
-    margin-top: 3%;
-  }
+  .cardTitle
+    font-size 130%
+    margin-bottom 10%
+
+  .logInButton
+    margin-top 3%
+
+  .signUpButton
+    margin-top 3%
+
+  .tabRow
+    border-radius 0
 
 
 </style>
