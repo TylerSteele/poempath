@@ -18,13 +18,9 @@
   }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-  ul {
+<style lang="stylus" scoped>
+  ul
     list-style-type: none;
     padding: 0;
-  }
 
-  li {
-  }
 </style>

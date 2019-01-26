@@ -1,7 +1,7 @@
 <template>
   <div class="row">
-    <q-btn id="approve" @click="approveAlert" color="light-blue-4" icon="check_circle" label="For Me"/>
-    <q-btn id="reject" @click="rejectAlert" color="deep-orange-5" icon="block" label="Not For Me"/>
+    <q-btn class="decisionBtn" @click="approveAlert" color="positive" icon="check_circle" label="For Me"/>
+    <q-btn class="decisionBtn" @click="rejectAlert" color="negative" icon="block" label="Not For Me"/>
   </div>
 </template>
 
@@ -13,7 +13,7 @@
         this.$q.notify({
           message: 'We knew you would like it!',
           timeout: 1500,
-          color: 'light-blue-3',
+          color: 'positive',
           icon: 'check_circle',
           position: 'bottom-left'
         })
@@ -22,7 +22,7 @@
         this.$q.notify({
           message: 'We will find something for you.',
           timeout: 1500,
-          color: 'deep-orange-4',
+          color: 'negative',
           icon: 'block',
           position: 'bottom-right'
         })
@@ -33,13 +33,9 @@
   }
 </script>
 
-<style scoped>
-  #approve {
-    margin: auto;
+<style lang="stylus" scoped>
+  .decisionBtn
+    margin auto auto 5%
 
-  }
-  #reject {
-    margin: auto;
-  }
 
 </style>

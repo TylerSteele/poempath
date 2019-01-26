@@ -1,4 +1,4 @@
-<template>
+<template class="body">
   <q-layout id="q-app" view="lHh Lpr lFf">
     <q-layout-header>
       <q-toolbar
@@ -16,10 +16,7 @@
 
         <q-toolbar-title>
           poempath
-          <div slot="subtitle">Poetry you'll enjoy</div>
-        </q-toolbar-title>
-        <q-toolbar-title v-if="loggedIn">
-          Hey, {{username}}
+          <div v-if="loggedIn" slot="subtitle">Poetry for {{username}}</div>
         </q-toolbar-title>
         <router-link tag="q-btn" v-if="loggedIn" to="/welcome"
                      v-on:click.native="setUserStatus(false)" replace>Log Out
@@ -66,8 +63,8 @@
 </template>
 
 <script>
-  import { openURL } from 'quasar'
-  import { PoetryAPI } from "./services/api/PoetryAPI"
+  import {openURL} from 'quasar'
+  import {PoetryAPI} from "./services/api/PoetryAPI"
 
   export default {
     name: 'LayoutDefault',
@@ -106,13 +103,6 @@
   }
 </script>
 
-<style>
-  body {
-    font-family: 'Roboto', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: #6d8fb3;
-    background-color: #121212;
-    margin-top: 60px;
-  }
+<style lang="stylus">
+
 </style>
