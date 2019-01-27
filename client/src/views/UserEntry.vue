@@ -176,7 +176,7 @@
               this.signUpLoading = false
               this.$emit('loggedIn', true)
               this.$store.dispatch('loadCurrentUser', signUpUsername)
-              this.$router.replace({name: "home"})
+              this.$router.replace({name: "introduction"})
             }
             if (data.message === 'usernameTaken') {
               this.usernameError = true

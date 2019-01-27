@@ -89,6 +89,11 @@
         else {
           this.$q.loading.hide({})
         }
+      },
+      currentUser (){
+        if(this.currentUser.status === 'new'){
+          this.$router.replace({name: "introduction"})
+        }
       }
     },
     methods: {

@@ -31,7 +31,9 @@ module.exports = ({router}) => {
       app.users.insertOne({
         username: ctx.request.body.username,
         password: await bcrypt.hash(ctx.request.body.password, 10),
-        status: 'new'
+        status: 'new',
+        likedPoems: [],
+        dislikedPoems: []
       })
       ctx.body = {message: 'userAdded'}
     }
