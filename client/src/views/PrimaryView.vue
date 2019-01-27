@@ -19,7 +19,6 @@
     components: {DecisionButtons, PoemDisplay},
     methods: {
       mounted() {
-
       },
     }
   }

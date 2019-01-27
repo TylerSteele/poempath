@@ -16,7 +16,7 @@
 
         <q-toolbar-title>
           poempath
-          <div v-if="loggedIn" slot="subtitle">Poetry for {{username}}</div>
+          <div v-if="loggedIn" slot="subtitle">Poetry for {{currentUser.username}}</div>
         </q-toolbar-title>
         <router-link tag="q-btn" v-if="loggedIn" to="/welcome"
                      v-on:click.native="setUserStatus(false)" replace>Log Out
@@ -56,15 +56,16 @@
     </q-layout-drawer>
 
     <q-page-container>
-      <router-view @loggedIn="setUserStatus" @username="setUsername"
-                   :poem="fetchedPoem" :username="username"/>
+      <router-view @loggedIn="setUserStatus" :poem="fetchedPoem"/>
     </q-page-container>
   </q-layout>
 </template>
 
 <script>
-  import {openURL} from 'quasar'
-  import {PoetryAPI} from "./services/api/PoetryAPI"
+  import { openURL } from 'quasar'
+  import { PoetryAPI } from './services/api/PoetryAPI'
+  import { mapState } from 'vuex'
+
 
   export default {
     name: 'LayoutDefault',
@@ -72,9 +73,13 @@
       return {
         leftDrawerOpen: this.$q.platform.is.desktop,
         fetchedPoem: {},
-        loggedIn: false,
-        username: ''
+        loggedIn: false
       }
+    },
+    computed: {
+      ...mapState([
+        'currentUser'
+      ])
     },
     methods: {
       openURL,
@@ -86,9 +91,10 @@
       },
       setUserStatus(isLoggedIn) {
         this.loggedIn = isLoggedIn
-      },
-      setUsername(newUsername) {
-        this.username = newUsername
+        // If logging out, clear the state
+        if(!isLoggedIn){
+          this.$store.dispatch('loadCurrentUser', '')
+        }
       }
     },
     mounted() {
