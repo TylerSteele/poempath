@@ -52,7 +52,8 @@
         passwordErrorLabel: 'Required',
         logInLoading: false,
         signUpLoading: false,
-        currentNotification: null,
+        currentNotification: null,        // Ensure only one notification is present. Calling one like a function
+                                          // this.currentNotification() dismisses it (see Quasar docs on notify)
         activeTab: 'logInTab'
       }
     },

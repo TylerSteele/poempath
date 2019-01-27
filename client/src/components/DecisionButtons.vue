@@ -8,9 +8,17 @@
 <script>
   export default {
     name: "DecisionButtons",
+    data() {
+      return {
+        currentNotification: null        // Ensure only one notification is present. Calling one like a function
+                                         // this.currentNotification() dismisses it (see Quasar docs on notify)
+      }
+    },
     methods: {
       approveAlert(){
-        this.$q.notify({
+        if (this.currentNotification)
+          this.currentNotification()
+        this.currentNotification = this.$q.notify({
           message: 'We knew you would like it!',
           timeout: 1500,
           color: 'positive',
@@ -19,7 +27,9 @@
         })
       },
       rejectAlert(){
-        this.$q.notify({
+        if (this.currentNotification)
+          this.currentNotification()
+        this.currentNotification = this.$q.notify({
           message: 'We will find something for you.',
           timeout: 1500,
           color: 'negative',
@@ -36,6 +46,9 @@
 <style lang="stylus" scoped>
   .decisionBtn
     margin auto auto 5%
+
+  .active
+    font-weight bold
 
 
 </style>
