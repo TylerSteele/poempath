@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import Router from './router.js'
+import store from './store.js'
 
 import './styles/quasar.styl'
 import 'quasar-extras/animate'
@@ -18,5 +19,6 @@ Vue.config.productionTip = false
 
 new Vue({
   render: h => h(App),
+  store,
   router: Router
 }).$mount('#app')
