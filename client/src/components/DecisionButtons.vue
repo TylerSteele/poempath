@@ -25,6 +25,7 @@
           icon: 'check_circle',
           position: 'bottom-left'
         })
+        this.$store.dispatch('loadCurrentPoem')
       },
       rejectAlert(){
         if (this.currentNotification)
@@ -36,6 +37,7 @@
           icon: 'block',
           position: 'bottom-right'
         })
+        this.$store.dispatch('loadCurrentPoem')
 
       }
 
