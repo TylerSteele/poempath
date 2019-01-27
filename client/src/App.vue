@@ -56,14 +56,13 @@
     </q-layout-drawer>
 
     <q-page-container>
-      <router-view @loggedIn="setUserStatus" :poem="fetchedPoem"/>
+      <router-view @loggedIn="setUserStatus" :poem="currentPoem"/>
     </q-page-container>
   </q-layout>
 </template>
 
 <script>
   import { openURL } from 'quasar'
-  import { PoetryAPI } from './services/api/PoetryAPI'
   import { mapState } from 'vuex'
 
 
@@ -72,23 +71,28 @@
     data() {
       return {
         leftDrawerOpen: this.$q.platform.is.desktop,
-        fetchedPoem: {},
         loggedIn: false
       }
     },
     computed: {
       ...mapState([
-        'currentUser'
+        'currentUser',
+        'currentPoem',
+        'isLoading'
       ])
+    },
+    watch: {
+      isLoading () {
+        if(this.isLoading){
+          this.$q.loading.show({})
+        }
+        else {
+          this.$q.loading.hide({})
+        }
+      }
     },
     methods: {
       openURL,
-      getPoem() {
-        PoetryAPI.getPoem().then((data) => {
-          // For random poem, the return is an array of length 1, not the object itself
-          this.fetchedPoem = data[0]
-        })
-      },
       setUserStatus(isLoggedIn) {
         this.loggedIn = isLoggedIn
         // If logging out, clear the state
@@ -101,9 +105,9 @@
       if (!this.loggedIn) {
         this.$router.replace({name: "welcome"})
       }
-      if (Object.keys(this.fetchedPoem).length === 0) {
+      if (Object.keys(this.currentPoem).length === 0) {
         // Make the API Request for the poem - this logic will change when connected to the NN
-        this.getPoem()
+        this.$store.dispatch('loadCurrentPoem')
       }
     }
   }
