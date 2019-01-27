@@ -95,6 +95,7 @@ module.exports = ({router}) => {
       ctx.body = { status: 'User not found' }
       ctx.status = 404
     }
+    console.log(ctx.body)
   })
 
   // Return a random user

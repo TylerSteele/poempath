@@ -35,9 +35,10 @@
 </template>
 
 <script>
-  import QBtn from "quasar-framework/src/components/btn/QBtn"
-  import QTab from "quasar-framework/src/components/tab/QTab"
-  import {UserAPI} from "../services/api/UserAPI"
+  import QBtn from 'quasar-framework/src/components/btn/QBtn'
+  import QTab from 'quasar-framework/src/components/tab/QTab'
+  import { UserAPI } from '../services/api/UserAPI'
+  import { mapActions } from 'vuex'
 
   export default {
     name: "UserEntry",
@@ -58,6 +59,9 @@
       }
     },
     methods: {
+      ...mapActions([
+        'loadCurrentUser'
+      ]),
       isActiveTab(tab) {
         return this.activeTab === tab
       },
@@ -75,14 +79,16 @@
       },
       logIn() {
         this.logInLoading = true
-        if (this.username !== '' && this.password !== '') {
+        let logInUsername = this.username.trim()
+        let logInPassword = this.password
+        if (logInUsername !== '' && logInPassword !== '') {
 
-          UserAPI.validateUser(this.username, this.password).then((data) => {
+          UserAPI.validateUser(logInUsername, logInPassword).then((data) => {
             if (data.message === 'accessGranted') {
               if (this.currentNotification)
                 this.currentNotification()
               this.currentNotification = this.$q.notify({
-                message: `Welcome, ${this.username}`,
+                message: `Welcome, ${logInUsername}`,
                 timeout: 1200,
                 color: 'positive',
                 icon: 'person',
@@ -94,7 +100,7 @@
               this.passwordErrorLabel = 'Required'
               this.logInLoading = false
               this.$emit('loggedIn', true)
-              this.$emit('username', this.username)
+              this.$store.dispatch('loadCurrentUser', logInUsername)
               this.$router.replace({name: "home"})
             }
             if (data.message === 'incorrectPassword') {
@@ -127,9 +133,9 @@
             }
           })
         } else {
-          if (this.username === '')
+          if (logInUsername === '')
             this.usernameError = true
-          if (this.password === '')
+          if (logInPassword === '')
             this.passwordError = true
           this.usernameErrorLabel = 'Required'
           this.passwordErrorLabel = 'Required'
@@ -148,14 +154,16 @@
       },
       signUp() {
         this.signUpLoading = true
-        if (this.username !== '' && this.password !== '') {
+        let signUpUsername = this.username.trim()
+        let signUpPassword = this.password
+        if (signUpUsername !== '' && this.password !== '') {
 
-          UserAPI.createUser(this.username, this.password).then((data) => {
+          UserAPI.createUser(signUpUsername, signUpPassword).then((data) => {
             if (data.message === 'userAdded') {
               if (this.currentNotification)
                 this.currentNotification()
               this.currentNotification = this.$q.notify({
-                message: `Account created. Welcome, ${this.username}`,
+                message: `Account created. Welcome, ${signUpUsername}`,
                 timeout: 1200,
                 color: 'positive',
                 icon: 'person',
@@ -167,7 +175,7 @@
               this.passwordErrorLabel = 'Required'
               this.signUpLoading = false
               this.$emit('loggedIn', true)
-              this.$emit('username', this.username)
+              this.$store.dispatch('loadCurrentUser', signUpUsername)
               this.$router.replace({name: "home"})
             }
             if (data.message === 'usernameTaken') {
@@ -186,9 +194,9 @@
             }
           })
         } else {
-          if (this.username === '')
+          if (signUpUsername === '')
             this.usernameError = true
-          if (this.password === '')
+          if (signUpPassword === '')
             this.passwordError = true
           this.usernameErrorLabel = 'Required'
           this.passwordErrorLabel = 'Required'
