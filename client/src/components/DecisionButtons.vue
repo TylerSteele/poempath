@@ -6,6 +6,7 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
   export default {
     name: "DecisionButtons",
     data() {
@@ -13,6 +14,12 @@
         currentNotification: null        // Ensure only one notification is present. Calling one like a function
                                          // this.currentNotification() dismisses it (see Quasar docs on notify)
       }
+    },
+    computed: {
+      ...mapState([
+        'currentUser',
+        'currentPoem'
+      ])
     },
     methods: {
       approveAlert(){
@@ -25,6 +32,14 @@
           icon: 'check_circle',
           position: 'bottom-left'
         })
+        let updatedUser = this.currentUser
+        if(updatedUser.likedPoems)
+        {
+          updatedUser.likedPoems.push(this.currentPoem)
+        } else {
+          updatedUser.likedPoems = [this.currentPoem]
+        }
+        this.$store.dispatch('updateUser', updatedUser)
         this.$store.dispatch('loadCurrentPoem')
         window.scrollTo(0,0)
       },
@@ -38,6 +53,14 @@
           icon: 'block',
           position: 'bottom-right'
         })
+        let updatedUser = this.currentUser
+        if(updatedUser.dislikedPoems)
+        {
+          updatedUser.dislikedPoems.push(this.currentPoem)
+        } else {
+          updatedUser.dislikedPoems = [this.currentPoem]
+        }
+        this.$store.dispatch('updateUser', updatedUser)
         this.$store.dispatch('loadCurrentPoem')
         window.scrollTo(0,0)
       }

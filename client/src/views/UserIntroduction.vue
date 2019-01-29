@@ -22,13 +22,13 @@
 </template>
 
 <script>
+
   export default {
     name: "UserIntroduction",
     methods: {
       exitIntroduction() {
-        // >> Set the user's status to something other than new
         this.$router.replace({name: "home"})
-        window.scrollTo(0,0)
+        window.scrollTo(0, 0)
       }
     }
   }
