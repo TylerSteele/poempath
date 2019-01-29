@@ -55,7 +55,7 @@
       </q-list>
     </q-layout-drawer>
 
-    <q-page-container>
+    <q-page-container style="padding: 0">
       <router-view @loggedIn="setUserStatus" :poem="currentPoem"/>
     </q-page-container>
   </q-layout>
