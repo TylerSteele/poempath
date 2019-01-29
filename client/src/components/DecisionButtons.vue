@@ -26,6 +26,7 @@
           position: 'bottom-left'
         })
         this.$store.dispatch('loadCurrentPoem')
+        window.scrollTo(0,0)
       },
       rejectAlert(){
         if (this.currentNotification)
@@ -38,7 +39,7 @@
           position: 'bottom-right'
         })
         this.$store.dispatch('loadCurrentPoem')
-
+        window.scrollTo(0,0)
       }
 
     }

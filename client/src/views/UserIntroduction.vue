@@ -28,6 +28,7 @@
       exitIntroduction() {
         // >> Set the user's status to something other than new
         this.$router.replace({name: "home"})
+        window.scrollTo(0,0)
       }
     }
   }

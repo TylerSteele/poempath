@@ -20,7 +20,11 @@
 
 <style lang="stylus" scoped>
   ul
-    list-style-type: none;
-    padding: 0;
+    list-style-type none
+    list-style-position outside
+    padding 0
+    padding-left 2em
+    padding-bottom 1px
+    text-indent -2em
 
 </style>
