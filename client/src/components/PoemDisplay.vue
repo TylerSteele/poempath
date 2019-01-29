@@ -1,8 +1,8 @@
 <template>
   <div class="poemWrapper">
 
-    <h4>{{ title }}</h4>
-    <h5>{{ author }}</h5>
+    <div class="titleText">{{ title }}</div>
+    <div class="authorText">{{ author }}</div>
     <BodyDisplay v-bind:lines="body"></BodyDisplay>
   </div>
 </template>
@@ -27,5 +27,10 @@
   .poemWrapper
     margin-left 10%
     margin-right 10%
+  .titleText
+    font-size 2em
+  .authorText
+    font-size 1.25em
+    margin-bottom 10%
 
 </style>

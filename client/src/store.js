@@ -43,6 +43,13 @@ export default new VueX.Store({
       commit('SET_CURRENT_POEM', newPoemArray[0])
       commit('SET_IS_LOADING', false)
 
+    },
+    async updateUser({commit}, updatedUser) {
+      commit('SET_IS_LOADING', true)
+      let newUser = await UserAPI.updateUser(updatedUser)
+        .catch(err => console.log(err))
+      commit('SET_CURRENT_USER', newUser.data)
+      commit('SET_IS_LOADING', false)
     }
   }
 })

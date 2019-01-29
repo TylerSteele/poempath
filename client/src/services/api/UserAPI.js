@@ -14,7 +14,7 @@ export class UserAPI {
       .post(API_URL + '/validate', {username: username, password: password}, {
         // Reject only if the status code is greater than or equal to 500
         validateStatus: function (status) {
-          return status < 500;
+          return status < 500
         }
       })
       .then(response => response.data)
@@ -26,7 +26,7 @@ export class UserAPI {
       .post(API_URL + '/signUp', {username: username, password: password}, {
         // Reject only if the status code is greater than or equal to 500
         validateStatus: function (status) {
-          return status < 500;
+          return status < 500
         }
       })
       .then(response => response.data)
@@ -38,10 +38,20 @@ export class UserAPI {
       .get(API_URL + '/users?username=' + username, {
         // Reject only if the status code is greater than or equal to 500
         validateStatus: function (status) {
-          return status < 500;
+          return status < 500
         }
       })
       .then(response => response.data)
+  }
+
+  static updateUser(userObj) {
+    // API request to update a given user
+    return axios
+      .put(API_URL + '/update', userObj,{
+        validateStatus: function(status){
+          return status < 500
+        }
+      })
   }
 
 }

@@ -5,55 +5,17 @@
               color="primary"
               :inverted="$q.theme === 'ios'"
       >
-        <q-btn
-                flat
-                dense
-                round
-                @click="leftDrawerOpen = !leftDrawerOpen"
-                aria-label="Menu"
-                icon="menu"
-        />
-
         <q-toolbar-title>
           poempath
-          <div v-if="loggedIn" slot="subtitle">Poetry for {{currentUser.username}}</div>
+          <div v-if="loggedIn" slot="subtitle">Poetry for
+            {{currentUser.username}}
+          </div>
         </q-toolbar-title>
         <router-link tag="q-btn" v-if="loggedIn" to="/welcome"
                      v-on:click.native="setUserStatus(false)" replace>Log Out
         </router-link>
       </q-toolbar>
     </q-layout-header>
-
-    <q-layout-drawer
-            v-model="leftDrawerOpen"
-            :content-class="$q.theme === 'mat' ? 'bg-grey-2' : null"
-    >
-      <q-list
-              no-border
-              link
-              inset-delimiter
-      >
-        <q-list no-border link inset-delimiter>
-          <q-list-header>Dev Links</q-list-header>
-          <q-item @click.native="openURL('https://github.com/SteeleTyler/poetically-sense')">
-            <q-item-side icon="code"/>
-            <q-item-main label="GitHub"></q-item-main>
-          </q-item>
-          <q-item @click.native="openURL('https://quasar-framework.org/components/')">
-            <q-item-side icon="build"/>
-            <q-item-main label="Component Docs"></q-item-main>
-          </q-item>
-          <q-item @click.native="openURL('https://quasar-framework.org/quasar-play/android/index.html#/showcase/style-and-identity/color-palette')">
-            <q-item-side icon="color_lens"/>
-            <q-item-main label="Color Palette"></q-item-main>
-          </q-item>
-          <q-item @click.native="openURL('https://material.io/tools/icons/?icon=color_lens&style=baseline')">
-            <q-item-side icon="add_to_queue"/>
-            <q-item-main label="Material Icons"></q-item-main>
-          </q-item>
-        </q-list>
-      </q-list>
-    </q-layout-drawer>
 
     <q-page-container style="padding: 0">
       <router-view @loggedIn="setUserStatus" :poem="currentPoem"/>
@@ -62,15 +24,14 @@
 </template>
 
 <script>
-  import { openURL } from 'quasar'
-  import { mapState } from 'vuex'
+  import {openURL} from 'quasar'
+  import {mapState} from 'vuex'
 
 
   export default {
     name: 'LayoutDefault',
     data() {
       return {
-        leftDrawerOpen: this.$q.platform.is.desktop,
         loggedIn: false
       }
     },
@@ -82,17 +43,23 @@
       ])
     },
     watch: {
-      isLoading () {
-        if(this.isLoading){
+      isLoading() {
+        if (this.isLoading) {
           this.$q.loading.show({})
-        }
-        else {
+        } else {
           this.$q.loading.hide({})
         }
       },
-      currentUser (){
-        if(this.currentUser.status === 'new'){
-          this.$router.replace({name: "introduction"})
+      currentUser() {
+        if (Object.keys(this.currentUser).length > 0) {
+          // If the current user does not have any like/dislike history
+          if (!this.currentUser.likedPoems && !this.currentUser.dislikedPoems) {
+            this.$router.replace({name: "introduction"})
+          } else {
+            if (this.currentUser.likedPoems.length === 0 && this.currentUser.dislikedPoems.length === 0) {
+              this.$router.replace({name: "introduction"})
+            }
+          }
         }
       }
     },
@@ -101,7 +68,7 @@
       setUserStatus(isLoggedIn) {
         this.loggedIn = isLoggedIn
         // If logging out, clear the state
-        if(!isLoggedIn){
+        if (!isLoggedIn) {
           this.$store.dispatch('loadCurrentUser', '')
         }
       }
