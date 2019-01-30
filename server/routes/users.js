@@ -1,14 +1,19 @@
 const bcrypt = require('bcrypt')
 const Koa = require('koa')
 const app = new Koa()
-const {ObjectId} = require('mongodb')
+const { ObjectId } = require('mongodb')
 require('../mongo')(app)
 module.exports = ({router}) => {
 
   // Create a new user given username and password
   router.post('/signUp', async (ctx) => {
+    // Check to see if the request lacks a recaptcha token
+    if (!ctx.request.body.recaptchaToken) {
+      ctx.body = {message: 'recaptchaTokenRequired'}
+      ctx.status = 422
+    }
     // Check to see if username or password are blank
-    if (ctx.request.body.username === '') {
+    else if (ctx.request.body.username === '') {
       if (ctx.request.body.password === '') {
         ctx.body = {message: 'userNamePasswordBlank'}
         ctx.status = 422
@@ -20,6 +25,32 @@ module.exports = ({router}) => {
       ctx.body = {message: 'passwordBlank'}
       ctx.status = 422
     }
+    const verifyCaptchaOptions = {
+      uri: 'https://www.google.com/recaptcha/api/siteverify',
+      json: true,
+      form: {
+        secret: process.env.CAPTCHA_SECRET,
+        response: ctx.request.body.recaptchaToken
+      }
+    }
+    /* Need to send request to verify the captcha. Not sure if i need to install
+      the "request" library: const request = require("request")
+
+      TODO: Duplicate this logic for validate
+
+    request.post(verifyCaptchaOptions, function (err, response, body) {
+        if (err) {
+          return res.status(500).json({message: "oops, something went wrong on our side"});
+        }
+
+        if (!body.success) {
+          return res.status(500).json({message: body["error-codes"].join(".")});
+        }
+
+        //Save the user to the database. At this point they have been verified.
+        res.status(201).json({message: "Congratulations! We think you are human."});
+      }
+    )*/
     // Check to see if a user exists with given username
     let existingUser = await app.users.findOne({username: ctx.request.body.username})
     // If so, return message and 409 status
@@ -41,6 +72,7 @@ module.exports = ({router}) => {
 
   // Validate user
   router.post('/validate', async (ctx) => {
+
     // Check to see if username or password are blank
     if (ctx.request.body.username === '') {
       if (ctx.request.body.password === '') {

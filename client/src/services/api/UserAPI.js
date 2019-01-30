@@ -8,10 +8,10 @@ export class UserAPI {
 
   }
 
-  static validateUser(username, password) {
+  static validateUser(username, password, recaptchaToken) {
     // API request to validate a user's credentials
     return axios
-      .post(API_URL + '/validate', {username: username, password: password}, {
+      .post(API_URL + '/validate', {username: username, password: password, recaptcha: recaptchaToken}, {
         // Reject only if the status code is greater than or equal to 500
         validateStatus: function (status) {
           return status < 500
@@ -20,10 +20,10 @@ export class UserAPI {
       .then(response => response.data)
   }
 
-  static createUser(username, password) {
+  static createUser(username, password, recaptchaToken) {
     // API request to create a user
     return axios
-      .post(API_URL + '/signUp', {username: username, password: password}, {
+      .post(API_URL + '/signUp', {username: username, password: password, recaptcha: recaptchaToken}, {
         // Reject only if the status code is greater than or equal to 500
         validateStatus: function (status) {
           return status < 500
