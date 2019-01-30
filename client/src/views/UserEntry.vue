@@ -1,7 +1,8 @@
 <template>
   <div>
     <q-card class="card">
-      <q-tabs v-model="activeTab" underline-color="secondary" color="primary" class="tabRow">
+      <q-tabs v-model="activeTab" underline-color="secondary" color="primary"
+              class="tabRow">
         <q-tab slot="title" name="logInTab">Log In</q-tab>
         <q-tab slot="title" name="signUpTab">Sign Up</q-tab>
       </q-tabs>
@@ -9,26 +10,36 @@
         <div class="cardTitle">Welcome to poempath</div>
         <q-field :error="usernameError" :error-label="usernameErrorLabel"
                  label="User Name" :count="24">
-          <q-input @focus="usernameError = false" @keyup.enter="simulateSubmit"
+          <q-input @focus="usernameError = false" @keyup.enter="submit"
                    v-model="username"
                    maxlength="24"/>
         </q-field>
         <q-field :error="passwordError" :error-label="passwordErrorLabel"
                  label="Password" :count="100">
-          <q-input @focus="passwordError = false" @keyup.enter="simulateSubmit"
+          <q-input @focus="passwordError = false" @keyup.enter="submit"
                    type="password"
                    v-model="password" maxlength="100"/>
         </q-field>
-        <q-btn @click="logIn" v-if="isActiveTab('logInTab')"
-               :loading="logInLoading" color="secondary" class="logInButton">
-          <q-spinner slot="loading"/>
-          Log In
-        </q-btn>
-        <q-btn @click="signUp" v-if="isActiveTab('signUpTab')"
-               :loading="signUpLoading" color="secondary" class="signUpButton">
-          <q-spinner slot="loading"/>
-          Sign Up
-        </q-btn>
+        <div class="input-group">
+          <vue-recaptcha
+                  ref="recaptcha"
+                  @verify="onCaptchaVerified"
+                  @expired="onCaptchaExpired"
+                  size="invisible"
+                  sitekey="6LcLvo0UAAAAABm2eK9s-uDHDU3WZnxcPH8DtbBe">
+          </vue-recaptcha>
+          <q-btn @click="submit" v-if="isActiveTab('logInTab')"
+                 :loading="logInLoading" color="secondary" class="logInButton">
+            <q-spinner slot="loading"/>
+            Log In
+          </q-btn>
+          <q-btn @click="submit" v-if="isActiveTab('signUpTab')"
+                 :loading="signUpLoading" color="secondary"
+                 class="signUpButton">
+            <q-spinner slot="loading"/>
+            Sign Up
+          </q-btn>
+        </div>
       </div>
     </q-card>
   </div>
@@ -37,12 +48,17 @@
 <script>
   import QBtn from 'quasar-framework/src/components/btn/QBtn'
   import QTab from 'quasar-framework/src/components/tab/QTab'
+  import VueRecaptcha from 'vue-recaptcha'
   import { UserAPI } from '../services/api/UserAPI'
   import { mapActions } from 'vuex'
 
   export default {
     name: "UserEntry",
-    components: {QBtn, QTab},
+    components: {
+      QBtn,
+      QTab,
+      'vue-recaptcha': VueRecaptcha
+    },
     data() {
       return {
         username: '',
@@ -65,30 +81,21 @@
       isActiveTab(tab) {
         return this.activeTab === tab
       },
-      simulateSubmit() {
-        switch (this.activeTab) {
-          case 'logInTab':
-            this.logIn()
-            break
-          case 'signUpTab':
-            this.signUp()
-            break
-          default:
-            break
-        }
+      submit() {
+        this.$refs.recaptcha.execute()
       },
-      logIn() {
+      logIn(recaptchaToken) {
         this.logInLoading = true
         let logInUsername = this.username.trim()
         let logInPassword = this.password
         if (logInUsername !== '' && logInPassword !== '') {
 
-          UserAPI.validateUser(logInUsername, logInPassword).then((data) => {
+          UserAPI.validateUser(logInUsername, logInPassword, recaptchaToken).then((data) => {
             if (data.message === 'accessGranted') {
               if (this.currentNotification)
                 this.currentNotification()
               this.currentNotification = this.$q.notify({
-                message: `Welcome, ${logInUsername}`,
+                message: `Welcome, ${ logInUsername }`,
                 timeout: 1200,
                 color: 'positive',
                 icon: 'person',
@@ -101,6 +108,7 @@
               this.logInLoading = false
               this.$emit('loggedIn', true)
               this.$store.dispatch('loadCurrentUser', logInUsername)
+              window.scrollTo(0, 0)
               this.$router.replace({name: "home"})
             }
             if (data.message === 'incorrectPassword') {
@@ -152,18 +160,19 @@
         }
 
       },
-      signUp() {
+      signUp(recaptchaToken) {
+        this.$refs.recaptcha.execute()
         this.signUpLoading = true
         let signUpUsername = this.username.trim()
         let signUpPassword = this.password
         if (signUpUsername !== '' && this.password !== '') {
 
-          UserAPI.createUser(signUpUsername, signUpPassword).then((data) => {
+          UserAPI.createUser(signUpUsername, signUpPassword, recaptchaToken).then((data) => {
             if (data.message === 'userAdded') {
               if (this.currentNotification)
                 this.currentNotification()
               this.currentNotification = this.$q.notify({
-                message: `Account created. Welcome, ${signUpUsername}`,
+                message: `Account created. Welcome, ${ signUpUsername }`,
                 timeout: 1200,
                 color: 'positive',
                 icon: 'person',
@@ -176,6 +185,7 @@
               this.signUpLoading = false
               this.$emit('loggedIn', true)
               this.$store.dispatch('loadCurrentUser', signUpUsername)
+              window.scrollTo(0, 0)
               this.$router.replace({name: "introduction"})
             }
             if (data.message === 'usernameTaken') {
@@ -213,6 +223,44 @@
         }
 
       },
+      onCaptchaVerified: function (recaptchaToken) {
+        this.$refs.recaptcha.reset();
+        /*axios.post("https://vue-recaptcha-demo.herokuapp.com/signup", {
+          email: self.email,
+          password: self.password,
+          recaptchaToken: recaptchaToken
+        }).then((response) => {
+          self.sucessfulServerResponse = response.data.message;
+        }).catch((err) => {
+          self.serverError = getErrorMessage(err);
+
+
+          //helper to get a displayable message to the user
+          function getErrorMessage(err) {
+            let responseBody;
+            responseBody = err.response;
+            if (!responseBody) {
+              responseBody = err;
+            }
+            else {
+              responseBody = err.response.data || responseBody;
+            }
+            return responseBody.message || JSON.stringify(responseBody);
+          }
+
+        }).then(() => {
+          self.status = "";
+        });*/
+        if (this.activeTab === 'logIn') {
+          this.logIn(recaptchaToken)
+        } else if (this.activeTab === 'signUp') {
+          this.signUp(recaptchaToken)
+        }
+
+      },
+      onCaptchaExpired: function () {
+        this.$refs.recaptcha.reset();
+      }
     }
   }
 </script>
