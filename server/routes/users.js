@@ -1,7 +1,8 @@
 const bcrypt = require('bcrypt')
 const Koa = require('koa')
 const app = new Koa()
-const { ObjectId } = require('mongodb')
+const request = require('request')
+const {ObjectId} = require('mongodb')
 require('../mongo')(app)
 module.exports = ({router}) => {
 
@@ -33,40 +34,39 @@ module.exports = ({router}) => {
         response: ctx.request.body.recaptchaToken
       }
     }
-    /* Need to send request to verify the captcha. Not sure if i need to install
-      the "request" library: const request = require("request")
-
-      TODO: Duplicate this logic for validate
-
-    request.post(verifyCaptchaOptions, function (err, response, body) {
+    console.log(verifyCaptchaOptions)
+    const captchaVerified = await request.post(verifyCaptchaOptions, function (err, response, body) {
         if (err) {
-          return res.status(500).json({message: "oops, something went wrong on our side"});
+          ctx.status = 500
+          ctx.body = {message: 'captchaError'}
+          return false
+        } else if (!body.success) {
+          ctx.status = 500
+          ctx.body = {message: 'captchaFailed'}
+          return false
         }
-
-        if (!body.success) {
-          return res.status(500).json({message: body["error-codes"].join(".")});
-        }
-
-        //Save the user to the database. At this point they have been verified.
-        res.status(201).json({message: "Congratulations! We think you are human."});
+        return true
       }
-    )*/
-    // Check to see if a user exists with given username
-    let existingUser = await app.users.findOne({username: ctx.request.body.username})
-    // If so, return message and 409 status
-    if (existingUser) {
-      ctx.body = {message: 'usernameTaken'}
-      ctx.status = 409
-    } else {
-      // Use bcrypt to encrypt the password and store it with the new user
-      app.users.insertOne({
-        username: ctx.request.body.username,
-        password: await bcrypt.hash(ctx.request.body.password, 10),
-        likedPoems: [],
-        dislikedPoems: [],
-        poetryQueue: []
-      })
-      ctx.body = {message: 'userAdded'}
+    )
+    console.log(captchaVerified)
+    if(captchaVerified){
+      // Check to see if a user exists with given username
+      let existingUser = await app.users.findOne({username: ctx.request.body.username})
+      // If so, return message and 409 status
+      if (existingUser) {
+        ctx.body = {message: 'usernameTaken'}
+        ctx.status = 409
+      } else {
+        // Use bcrypt to encrypt the password and store it with the new user
+        app.users.insertOne({
+          username: ctx.request.body.username,
+          password: await bcrypt.hash(ctx.request.body.password, 10),
+          likedPoems: [],
+          dislikedPoems: [],
+          poetryQueue: []
+        })
+        ctx.body = {message: 'userAdded'}
+      }
     }
   })
 
@@ -123,7 +123,7 @@ module.exports = ({router}) => {
     if (updatedUser) {
       ctx.body = updatedUser
       ctx.status = 200
-    } else{
+    } else {
       ctx.body = {message: 'userNotFound'}
       ctx.stats = 404
     }
@@ -137,8 +137,8 @@ module.exports = ({router}) => {
       ctx.status = 404
     } else {
       app.users.deleteOne({_id: ObjectId(ctx.params.userID)})
-      console.log(`Username: ${userToDelete.username} deleted`)
-      ctx.body = `Successfully deleted user ${userToDelete.username}`
+      console.log(`Username: ${ userToDelete.username } deleted`)
+      ctx.body = `Successfully deleted user ${ userToDelete.username }`
     }
   })
 
