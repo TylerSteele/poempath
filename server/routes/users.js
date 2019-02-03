@@ -6,6 +6,61 @@ const {ObjectId} = require('mongodb')
 require('../mongo')(app)
 module.exports = ({router}) => {
 
+  // Create a survey user given sessionID and recaptcha token
+  router.post('/survey', async (ctx) => {
+    // Check to see if the request lacks a recaptcha token
+    if (!ctx.request.body.recaptchaToken) {
+      ctx.body = {message: 'recaptchaTokenRequired'}
+      ctx.status = 422
+    }
+    // Check to see if sessionID is blank
+    else if (ctx.request.body.sessionID === '') {
+        ctx.body = {message: 'sessionIDBlank'}
+        ctx.status = 422
+    } else {
+      const verifyCaptchaOptions = await {
+        uri: 'https://www.google.com/recaptcha/api/siteverify',
+        json: true,
+        form: {
+          secret: process.env.CAPTCHA_SECRET,
+          response: ctx.request.body.recaptchaToken
+        }
+      }
+      const captchaVerified = await request.post(verifyCaptchaOptions, function (err, response, body) {
+          if (err) {
+            ctx.status = 500
+            ctx.body = {message: 'captchaError'}
+            return false
+          } else if (!body.success) {
+            ctx.status = 500
+            ctx.body = {message: 'captchaFailed'}
+            return false
+          }
+          return true
+        }
+      )
+      if (captchaVerified) {
+        // Check to see if a user exists with given sessionID
+        let existingUser = await app.users.findOne({username: ctx.request.body.sessionID})
+        // If so, return message and 409 status
+        if (existingUser) {
+          ctx.body = {message: 'usernameExists'}
+          ctx.status = 409
+        } else {
+          // Use bcrypt to encrypt the password and store it with the new user
+          app.users.insertOne({
+            username: ctx.request.body.sessionID,
+            likedPoems: [],
+            dislikedPoems: [],
+            poetryQueue: []
+          })
+          ctx.body = {message: 'surveyAdded'}
+        }
+      }
+    }
+    console.log(ctx.body)
+  })
+
   // Create a new user given username and password
   router.post('/signUp', async (ctx) => {
     // Check to see if the request lacks a recaptcha token

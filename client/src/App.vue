@@ -7,13 +7,9 @@
       >
         <q-toolbar-title>
           poempath
-          <div v-if="loggedIn" slot="subtitle">Poetry for
-            {{currentUser.username}}
+          <div v-if="loggedIn" slot="subtitle">Data Collection
           </div>
         </q-toolbar-title>
-        <router-link tag="q-btn" v-if="loggedIn" to="/welcome"
-                     v-on:click.native="setUserStatus(false)" replace>Log Out
-        </router-link>
       </q-toolbar>
     </q-layout-header>
 
@@ -32,7 +28,7 @@
     name: 'LayoutDefault',
     data() {
       return {
-        loggedIn: false
+        loggedIn: true
       }
     },
     computed: {

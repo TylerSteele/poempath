@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import Router from './router.js'
 import store from './store.js'
+import VueSession from 'vue-session'
 
 import './styles/quasar.styl'
 import 'quasar-extras/animate'
@@ -14,6 +15,8 @@ Vue.use(Quasar, {
  })
 
 Vue.use(Router)
+
+Vue.use(VueSession)
 
 Vue.config.productionTip = false
 
