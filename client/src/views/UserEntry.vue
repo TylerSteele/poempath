@@ -28,16 +28,25 @@
                   size="invisible"
                   sitekey="6LcLvo0UAAAAABm2eK9s-uDHDU3WZnxcPH8DtbBe">
           </vue-recaptcha>
-          <q-btn @click="submit" v-if="isActiveTab('logInTab')"
-                 :loading="logInLoading" color="secondary" class="logInButton">
-            <q-spinner slot="loading"/>
+          <q-btn
+                  @click="submit"
+                  v-if="isActiveTab('logInTab')"
+                  :loading="logInLoading"
+                  color="secondary"
+                  class="logInButton"
+                  type="submit">
             Log In
-          </q-btn>
-          <q-btn @click="submit" v-if="isActiveTab('signUpTab')"
-                 :loading="signUpLoading" color="secondary"
-                 class="signUpButton">
             <q-spinner slot="loading"/>
+          </q-btn>
+          <q-btn
+                  @click="submit"
+                  v-if="isActiveTab('signUpTab')"
+                  :loading="signUpLoading"
+                  color="secondary"
+                  class="signUpButton"
+                  type="submit">
             Sign Up
+            <q-spinner slot="loading"/>
           </q-btn>
         </div>
       </div>
@@ -82,15 +91,18 @@
         return this.activeTab === tab
       },
       submit() {
+        console.log('Button clicked!')
         this.$refs.recaptcha.execute()
       },
       logIn(recaptchaToken) {
         this.logInLoading = true
         let logInUsername = this.username.trim()
         let logInPassword = this.password
+        this.$refs.recaptcha.reset();
         if (logInUsername !== '' && logInPassword !== '') {
-
+          // Send captcha token and username and password to server.
           UserAPI.validateUser(logInUsername, logInPassword, recaptchaToken).then((data) => {
+            // Handle response accordingly
             if (data.message === 'accessGranted') {
               if (this.currentNotification)
                 this.currentNotification()
@@ -109,9 +121,11 @@
               this.$emit('loggedIn', true)
               this.$store.dispatch('loadCurrentUser', logInUsername)
               window.scrollTo(0, 0)
+              // If successful, go to the home view
               this.$router.replace({name: "home"})
             }
-            if (data.message === 'incorrectPassword') {
+            // Otherwise, inform user why log in failed
+            else if (data.message === 'incorrectPassword') {
               this.passwordError = true
               this.passwordErrorLabel = 'Incorrect Password'
               this.logInLoading = false
@@ -125,7 +139,7 @@
                 position: 'top'
               })
             }
-            if (data.message === 'userNotFound') {
+            else if (data.message === 'userNotFound') {
               this.usernameError = true
               this.usernameErrorLabel = 'User not found'
               this.logInLoading = false
@@ -136,6 +150,19 @@
                 timeout: 1200,
                 color: 'warning',
                 icon: 'warning',
+                position: 'top'
+              })
+            } else if (data.message === 'recaptchaTokenRequired' ||
+              data.message === 'captchaError' ||
+              data.message === 'captchaFailed') {
+              this.logInLoading = false
+              if (this.currentNotification)
+                this.currentNotification()
+              this.currentNotification = this.$q.notify({
+                message: 'ReCaptcha verification error. Please reload the page and try again.',
+                timeout: 1200,
+                color: 'negative',
+                icon: 'block',
                 position: 'top'
               })
             }
@@ -161,13 +188,14 @@
 
       },
       signUp(recaptchaToken) {
-        this.$refs.recaptcha.execute()
         this.signUpLoading = true
         let signUpUsername = this.username.trim()
         let signUpPassword = this.password
+        this.$refs.recaptcha.reset();
         if (signUpUsername !== '' && this.password !== '') {
-
+          // Send captcha token and username and password to server.
           UserAPI.createUser(signUpUsername, signUpPassword, recaptchaToken).then((data) => {
+            // Handle response accordingly
             if (data.message === 'userAdded') {
               if (this.currentNotification)
                 this.currentNotification()
@@ -186,9 +214,11 @@
               this.$emit('loggedIn', true)
               this.$store.dispatch('loadCurrentUser', signUpUsername)
               window.scrollTo(0, 0)
+              // If successful, go to the introduction view
               this.$router.replace({name: "introduction"})
             }
-            if (data.message === 'usernameTaken') {
+            // Otherwise, inform user why log in failed
+            else if (data.message === 'usernameTaken') {
               this.usernameError = true
               this.usernameErrorLabel = 'Username taken'
               this.signUpLoading = false
@@ -199,6 +229,20 @@
                 timeout: 1200,
                 color: 'warning',
                 icon: 'error',
+                position: 'top'
+              })
+            }
+            else if (data.message === 'recaptchaTokenRequired' ||
+              data.message === 'captchaError' ||
+              data.message === 'captchaFailed') {
+              this.signUpLoading = false
+              if (this.currentNotification)
+                this.currentNotification()
+              this.currentNotification = this.$q.notify({
+                message: 'ReCaptcha verification error. Please reload the page and try again.',
+                timeout: 1200,
+                color: 'negative',
+                icon: 'block',
                 position: 'top'
               })
             }
@@ -224,36 +268,9 @@
 
       },
       onCaptchaVerified: function (recaptchaToken) {
-        this.$refs.recaptcha.reset();
-        /*axios.post("https://vue-recaptcha-demo.herokuapp.com/signup", {
-          email: self.email,
-          password: self.password,
-          recaptchaToken: recaptchaToken
-        }).then((response) => {
-          self.sucessfulServerResponse = response.data.message;
-        }).catch((err) => {
-          self.serverError = getErrorMessage(err);
-
-
-          //helper to get a displayable message to the user
-          function getErrorMessage(err) {
-            let responseBody;
-            responseBody = err.response;
-            if (!responseBody) {
-              responseBody = err;
-            }
-            else {
-              responseBody = err.response.data || responseBody;
-            }
-            return responseBody.message || JSON.stringify(responseBody);
-          }
-
-        }).then(() => {
-          self.status = "";
-        });*/
-        if (this.activeTab === 'logIn') {
+        if (this.activeTab === 'logInTab') {
           this.logIn(recaptchaToken)
-        } else if (this.activeTab === 'signUp') {
+        } else if (this.activeTab === 'signUpTab') {
           this.signUp(recaptchaToken)
         }
 

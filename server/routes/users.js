@@ -25,56 +25,60 @@ module.exports = ({router}) => {
     } else if (ctx.request.body.password === '') {
       ctx.body = {message: 'passwordBlank'}
       ctx.status = 422
-    }
-    const verifyCaptchaOptions = {
-      uri: 'https://www.google.com/recaptcha/api/siteverify',
-      json: true,
-      form: {
-        secret: process.env.CAPTCHA_SECRET,
-        response: ctx.request.body.recaptchaToken
-      }
-    }
-    console.log(verifyCaptchaOptions)
-    const captchaVerified = await request.post(verifyCaptchaOptions, function (err, response, body) {
-        if (err) {
-          ctx.status = 500
-          ctx.body = {message: 'captchaError'}
-          return false
-        } else if (!body.success) {
-          ctx.status = 500
-          ctx.body = {message: 'captchaFailed'}
-          return false
+    } else {
+      const verifyCaptchaOptions = await {
+        uri: 'https://www.google.com/recaptcha/api/siteverify',
+        json: true,
+        form: {
+          secret: process.env.CAPTCHA_SECRET,
+          response: ctx.request.body.recaptchaToken
         }
-        return true
       }
-    )
-    console.log(captchaVerified)
-    if(captchaVerified){
-      // Check to see if a user exists with given username
-      let existingUser = await app.users.findOne({username: ctx.request.body.username})
-      // If so, return message and 409 status
-      if (existingUser) {
-        ctx.body = {message: 'usernameTaken'}
-        ctx.status = 409
-      } else {
-        // Use bcrypt to encrypt the password and store it with the new user
-        app.users.insertOne({
-          username: ctx.request.body.username,
-          password: await bcrypt.hash(ctx.request.body.password, 10),
-          likedPoems: [],
-          dislikedPoems: [],
-          poetryQueue: []
-        })
-        ctx.body = {message: 'userAdded'}
+      const captchaVerified = await request.post(verifyCaptchaOptions, function (err, response, body) {
+          if (err) {
+            ctx.status = 500
+            ctx.body = {message: 'captchaError'}
+            return false
+          } else if (!body.success) {
+            ctx.status = 500
+            ctx.body = {message: 'captchaFailed'}
+            return false
+          }
+          return true
+        }
+      )
+      if (captchaVerified) {
+        // Check to see if a user exists with given username
+        let existingUser = await app.users.findOne({username: ctx.request.body.username})
+        // If so, return message and 409 status
+        if (existingUser) {
+          ctx.body = {message: 'usernameTaken'}
+          ctx.status = 409
+        } else {
+          // Use bcrypt to encrypt the password and store it with the new user
+          app.users.insertOne({
+            username: ctx.request.body.username,
+            password: await bcrypt.hash(ctx.request.body.password, 10),
+            likedPoems: [],
+            dislikedPoems: [],
+            poetryQueue: []
+          })
+          ctx.body = {message: 'userAdded'}
+        }
       }
     }
+    console.log(ctx.body)
   })
 
   // Validate user
   router.post('/validate', async (ctx) => {
-
+    // Check to see if the request lacks a recaptcha token
+    if (!ctx.request.body.recaptchaToken) {
+      ctx.body = {message: 'recaptchaTokenRequired'}
+      ctx.status = 422
+    }
     // Check to see if username or password are blank
-    if (ctx.request.body.username === '') {
+    else if (ctx.request.body.username === '') {
       if (ctx.request.body.password === '') {
         ctx.body = {message: 'userNamePasswordBlank'}
         ctx.status = 422
@@ -85,21 +89,45 @@ module.exports = ({router}) => {
     } else if (ctx.request.body.password === '') {
       ctx.body = {message: 'passwordBlank'}
       ctx.status = 422
-    }
-    // Check to see if a user exists with given username
-    let existingUser = await app.users.findOne({username: ctx.request.body.username})
-    // If not, return message and 404 status
-    if (!existingUser) {
-      ctx.body = {message: 'userNotFound'}
-      ctx.status = 404
     } else {
-      // Use bcrypt to encrypt incoming password and compare to stored one
-      let passwordsMatch = await bcrypt.compare(ctx.request.body.password, existingUser.password)
-      if (passwordsMatch) {
-        ctx.body = {message: 'accessGranted'}
-      } else {
-        ctx.body = {message: 'incorrectPassword'}
-        ctx.status = 422
+      const verifyCaptchaOptions = await {
+        uri: 'https://www.google.com/recaptcha/api/siteverify',
+        json: true,
+        form: {
+          secret: process.env.CAPTCHA_SECRET,
+          response: ctx.request.body.recaptchaToken
+        }
+      }
+      const captchaVerified = await request.post(verifyCaptchaOptions, function (err, response, body) {
+          if (err) {
+            ctx.status = 500
+            ctx.body = {message: 'captchaError'}
+            return false
+          } else if (!body.success) {
+            ctx.status = 500
+            ctx.body = {message: 'captchaFailed'}
+            return false
+          }
+          return true
+        }
+      )
+      if (captchaVerified) {
+        // Check to see if a user exists with given username
+        let existingUser = await app.users.findOne({username: ctx.request.body.username})
+        // If not, return message and 404 status
+        if (!existingUser) {
+          ctx.body = {message: 'userNotFound'}
+          ctx.status = 404
+        } else {
+          // Use bcrypt to encrypt incoming password and compare to stored one
+          let passwordsMatch = await bcrypt.compare(ctx.request.body.password, existingUser.password)
+          if (passwordsMatch) {
+            ctx.body = {message: 'accessGranted'}
+          } else {
+            ctx.body = {message: 'incorrectPassword'}
+            ctx.status = 422
+          }
+        }
       }
     }
     console.log(ctx.body)
