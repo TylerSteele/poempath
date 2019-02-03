@@ -24,8 +24,8 @@
 </template>
 
 <script>
-  import {openURL} from 'quasar'
-  import {mapState} from 'vuex'
+  import { openURL } from 'quasar'
+  import { mapState } from 'vuex'
 
 
   export default {
@@ -74,6 +74,12 @@
       }
     },
     mounted() {
+      // Add the reCaptcha script to the document
+      let recaptchaScript = document.createElement('script')
+      recaptchaScript.setAttribute('src', 'https://www.google.com/recaptcha/api.js?onload=vueRecaptchaApiLoaded&render=explicit')
+      recaptchaScript.async = true
+      recaptchaScript.defer = true
+      document.head.appendChild(recaptchaScript)
       if (!this.loggedIn) {
         this.$router.replace({name: "welcome"})
       }
