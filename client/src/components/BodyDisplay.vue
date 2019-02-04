@@ -26,5 +26,6 @@
     padding-left 2em
     padding-bottom 1px
     text-indent -2em
+    font-size 4vmin
 
 </style>

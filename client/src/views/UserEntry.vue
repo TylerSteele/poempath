@@ -2,20 +2,21 @@
   <div>
     <q-card class="card">
       <div class="cardContents">
-        <h3>Welcome to poempath (Survey)</h3>
-        <p>Please read each poem that is presented. <br><br>
-          If you enjoyed the poem, click
-          <q-btn color="positive" icon="check_circle" label="For Me"/>
-          . <br><br>
-          If you did not enjoy the poem, click
-          <q-btn color="negative" icon="block" label="Not For Me"/>
-          . <br><br>
-          You will be shown approximately 10 poems and will be presented with a
-          confirmation of completion at the end. (Please stay to the end! The data
-          is of no use if it is incomplete.)<br><br>
-          Please refrain from retaking this survey (creating another account). You
-          will see the same poems and will negatively impact the quality of my
-          data set.
+        <p class="cardTitle"><b>Welcome to the poempath Survey</b></p>
+        <p>Please read each poem that is presented.<br><br>
+          If you enjoyed the poem, click:
+          <br>
+          <q-btn class="btn" color="positive" icon="check_circle" label="For Me"/>
+          <br><br>
+          If you did not enjoy the poem, or if you are indifferent towards it, click:
+          <br>
+          <q-btn class="btn" color="negative" icon="block" label="Not For Me"/>
+          <br><br>
+          If there is an issue with the poem like a line missing click:
+          <br>
+          <q-btn class="btn" color="secondary" icon="broken_image" label="Skip"/>
+          <br><br>
+          Go through as many poems as you would like, and thank you!
         </p>
         <div class="input-group">
           <vue-recaptcha
@@ -26,6 +27,7 @@
                   sitekey="6LcLvo0UAAAAABm2eK9s-uDHDU3WZnxcPH8DtbBe">
           </vue-recaptcha>
           <q-btn
+                  class="btn"
                   @click="submit"
                   color="secondary"
                   label="Okay"
@@ -63,10 +65,10 @@
         'loadCurrentUser'
       ]),
       submit() {
+        this.entryLoading = true
         this.$refs.recaptcha.execute()
       },
       onCaptchaVerified: function (recaptchaToken) {
-        this.entryLoading = true
         this.$session.start()
         let sessionID = this.$session.id()
         // All sessionIDs start with "sess:" so remove that
@@ -75,16 +77,15 @@
         // Send captcha token and username and password to server.
         UserAPI.createSurveyUser(sessionID, recaptchaToken).then((data) => {
           // Handle response accordingly
-          if (data.message === 'userAdded') {
+          if (data.message === 'surveyAdded') {
             if (this.currentNotification)
               this.currentNotification()
             this.entryLoading = false
-            this.$emit('loggedIn', true)
-            console.log('About to load current user')
+            // If successful, go to the home view
+            this.$router.replace({name: "home"})
             this.$store.dispatch('loadCurrentUser', sessionID)
             window.scrollTo(0, 0)
-            // If successful, go to the introduction view
-            this.$router.replace({name: "home"})
+            this.$emit('loggedIn', true)
           }
           // Otherwise, inform user why log in failed
           else if (data.message === 'sessionIDBlank') {
@@ -130,11 +131,12 @@
     background-color $neutral
 
   .cardContents
-    padding 10%
+    padding 6vmin
+    font-size 4vmin
 
   .cardTitle
-    font-size 130%
-    margin-bottom 10%
+    font-size 5vmin
+    margin-bottom 4vmin
 
   .logInButton
     margin-top 3%
@@ -144,6 +146,12 @@
 
   .tabRow
     border-radius 0
+
+  .btn
+    margin auto auto
+    font-size 3vmin
+    padding 2vmin
+    width 30vmin
 
 
 </style>
