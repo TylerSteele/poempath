@@ -25,12 +25,16 @@
 
 <style lang="stylus" scoped>
   .poemWrapper
-    margin-left 10%
-    margin-right 10%
+    margin-left 10vw
+    margin-right 10vw
+    margin-top 25vmin
+    min-height 60vh
   .titleText
-    font-size 2em
+    font-size 6vmin
+    margin-bottom .5em
+    font-weight bold
   .authorText
-    font-size 1.25em
-    margin-bottom 10%
+    font-size 5vmin
+    margin-bottom 1em
 
 </style>

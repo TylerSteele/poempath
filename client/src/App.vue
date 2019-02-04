@@ -2,12 +2,13 @@
   <q-layout id="q-app" view="lHh Lpr lFf">
     <q-layout-header>
       <q-toolbar
+              id="appTitleBar"
               color="primary"
               :inverted="$q.theme === 'ios'"
       >
-        <q-toolbar-title>
+        <q-toolbar-title id="appTitle">
           poempath
-          <div v-if="loggedIn" slot="subtitle">Data Collection
+          <div class="userSubtitle" v-if="loggedIn" slot="subtitle">Data Collection
           </div>
         </q-toolbar-title>
       </q-toolbar>
@@ -28,7 +29,7 @@
     name: 'LayoutDefault',
     data() {
       return {
-        loggedIn: true
+        loggedIn: false
       }
     },
     computed: {
@@ -47,16 +48,10 @@
         }
       },
       currentUser() {
-        if (Object.keys(this.currentUser).length > 0) {
-          // If the current user does not have any like/dislike history
-          if (!this.currentUser.likedPoems && !this.currentUser.dislikedPoems) {
-            this.$router.replace({name: "introduction"})
-          } else {
-            if (this.currentUser.likedPoems.length === 0 && this.currentUser.dislikedPoems.length === 0) {
-              this.$router.replace({name: "introduction"})
-            }
-          }
+        if(Object.keys(this.currentUser()).length === 0){
+          this.$router.replace({name: "introduction"})
         }
+
       }
     },
     methods: {
@@ -77,7 +72,7 @@
       recaptchaScript.defer = true
       document.head.appendChild(recaptchaScript)
       if (!this.loggedIn) {
-        this.$router.replace({name: "welcome"})
+        this.$router.replace({name: "introduction"})
       }
       if (Object.keys(this.currentPoem).length === 0) {
         // Make the API Request for the poem - this logic will change when connected to the NN
@@ -88,5 +83,12 @@
 </script>
 
 <style lang="stylus">
-
+  #appTitleBar
+    padding 3vmin
+  #appTitle
+    font-size 6vmin
+  #q-app
+    margin-top 25vmin
+  .userSubtitle
+    font-size 4vmin
 </style>

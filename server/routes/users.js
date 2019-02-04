@@ -51,8 +51,8 @@ module.exports = ({router}) => {
           app.users.insertOne({
             username: ctx.request.body.sessionID,
             likedPoems: [],
-            dislikedPoems: [],
-            poetryQueue: []
+            skippedPoems: [],
+            dislikedPoems: []
           })
           ctx.body = {message: 'surveyAdded'}
         }
@@ -185,7 +185,6 @@ module.exports = ({router}) => {
         }
       }
     }
-    console.log(ctx.body)
   })
 
   // Update user
@@ -194,15 +193,15 @@ module.exports = ({router}) => {
     let updatedUser = JSON.parse(JSON.stringify(ctx.request.body))
     // Delete the id and the password (if it exists)
     delete updatedUser._id
-    delete updatedUser.password
+    if(updatedUser.password)
+      delete updatedUser.password
     let updateResponse = await app.users.updateOne(
       {_id: ObjectId(ctx.request.body._id)},
       {$set: updatedUser})
-    console.log(updateResponse.result)
     // Find the newly updated user and return that
     updatedUser = await app.users.findOne({_id: ObjectId(ctx.request.body._id)})
-    delete updatedUser.password
-    console.log(updatedUser)
+    if(updatedUser.password)
+      delete updatedUser.password
     if (updatedUser) {
       ctx.body = updatedUser
       ctx.status = 200
