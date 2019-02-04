@@ -68,8 +68,9 @@
       onCaptchaVerified: function (recaptchaToken) {
         this.entryLoading = true
         this.$session.start()
-        console.log(this.$session.id())
-        const sessionID = this.$session.id()
+        let sessionID = this.$session.id()
+        // All sessionIDs start with "sess:" so remove that
+        sessionID = sessionID.slice(5, sessionID.length)
         this.$refs.recaptcha.reset();
         // Send captcha token and username and password to server.
         UserAPI.createSurveyUser(sessionID, recaptchaToken).then((data) => {
@@ -100,7 +101,7 @@
           } else if (data.message === 'recaptchaTokenRequired' ||
             data.message === 'captchaError' ||
             data.message === 'captchaFailed') {
-            this.signUpLoading = false
+            this.entryLoading = false
             if (this.currentNotification)
               this.currentNotification()
             this.currentNotification = this.$q.notify({
