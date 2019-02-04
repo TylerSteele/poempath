@@ -35,7 +35,7 @@ export class UserAPI {
   static createSurveyUser(sessionID, recaptchaToken) {
     // API request to create a survey user (without username or password)
     return axios
-      .post(API_URL + '/survey', {session: sessionID, recaptchaToken: recaptchaToken}, {
+      .post(API_URL + '/survey', {sessionID: sessionID, recaptchaToken: recaptchaToken}, {
           // Reject only if the status code is greater than or equal to 500
           validateStatus: function (status) {
             return status < 500
