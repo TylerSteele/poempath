@@ -211,19 +211,6 @@ module.exports = ({router}) => {
     }
   })
 
-  // Delete user
-  router.delete('/:userID', async (ctx) => {
-    let userToDelete = await app.users.findOne({_id: ObjectId(ctx.params.userID)})
-    if (!userToDelete) {
-      ctx.body = {message: 'userNotFound'}
-      ctx.status = 404
-    } else {
-      app.users.deleteOne({_id: ObjectId(ctx.params.userID)})
-      console.log(`Username: ${ userToDelete.username } deleted`)
-      ctx.body = `Successfully deleted user ${ userToDelete.username }`
-    }
-  })
-
   // This should be more secure (beyond the scope of the project)
   router.get('/users', async (ctx) => {
     let user = await app.users.findOne({username: ctx.query.username})

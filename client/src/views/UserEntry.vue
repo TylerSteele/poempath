@@ -24,7 +24,8 @@
                   @verify="onCaptchaVerified"
                   @expired="onCaptchaExpired"
                   size="invisible"
-                  sitekey="6LcLvo0UAAAAABm2eK9s-uDHDU3WZnxcPH8DtbBe">
+                  sitekey="6LcSLY8UAAAAAFOG_d7LsMdQsVoMBqqNzerAJIoH
+">
           </vue-recaptcha>
           <q-btn
                   class="btn"
