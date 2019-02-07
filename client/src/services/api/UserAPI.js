@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = 'https://api.poempath.com/'
+const API_URL = 'https://api.poempath.com'
 
 
 export class UserAPI {
