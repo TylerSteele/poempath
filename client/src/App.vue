@@ -17,13 +17,6 @@
     <q-page-container style="padding: 0">
       <router-view @loggedIn="setUserStatus" :poem="currentPoem"/>
     </q-page-container>
-    <div class="centerContainer">
-    <div v-if="!loggedIn" class="recaptchaMessage">
-      This site is protected by reCAPTCHA and the Google
-      <a href="https://policies.google.com/privacy">Privacy Policy</a> and
-      <a href="https://policies.google.com/terms">Terms of Service</a> apply.
-    </div>
-    </div>
   </q-layout>
 </template>
 
@@ -55,7 +48,7 @@
         }
       },
       currentUser() {
-        if(Object.keys(this.currentUser).length === 0){
+        if (Object.keys(this.currentUser).length === 0) {
           this.$router.replace({name: "introduction"})
         }
 
@@ -94,19 +87,18 @@
     padding 1rem
     @media only screen and (orientation portrait)
       padding .5rem
+
   #appTitle
     font-size 2.5rem
     @media only screen and (orientation portrait)
       font-size 1.5rem
+
   #q-app
-    margin-top 8rem
-    @media only screen and (orientation portrait)
-      margin-top 6rem
+    min-height 80vh
+
   .userSubtitle
     font-size 1.5rem
     @media only screen and (orientation portrait)
       font-size 1rem
-  .recaptchaMessage
-    bottom 0
-    position fixed
+
 </style>

@@ -2,7 +2,7 @@
   <div>
     <q-card class="card">
       <div class="cardContents">
-        <div class="cardTitle"><b>Welcome to the poempath Survey</b></div>
+        <div class="cardTitle"><b>Welcome to the poempath survey</b></div>
         <div>Please read each poem that is presented.<br><br>
           If you enjoyed the poem, click:
           <div class="centerConditional">
@@ -44,6 +44,13 @@
         </div>
       </div>
     </q-card>
+    <div class="centerContainer recaptchaMessage">
+      <div>
+        This site is protected by reCAPTCHA and the Google
+        <a href="https://policies.google.com/privacy">Privacy Policy</a> and
+        <a href="https://policies.google.com/terms">Terms of Service</a> apply.
+      </div>
+    </div>
   </div>
 </template>
 
@@ -132,15 +139,20 @@
   @import '~variables'
 
   .card
-    margin 10% 10%
+    margin-left 10%
+    margin-right 10%
+    margin-top 10%
     border-radius .75rem
     background-color $neutral
+    @media only screen and (orientation portrait)
+      margin-top 20%
 
   .cardContents
-    padding 1.5rem
+    padding 3rem
     font-size 2rem
     @media only screen and (orientation portrait)
       font-size 1.25rem
+      padding 1.5rem
 
   .cardTitle
     margin-bottom 1rem
@@ -174,5 +186,8 @@
       justify-content center
       padding-top 1rem
 
+
+  .recaptchaMessage
+    padding-top 2rem
 
 </style>
