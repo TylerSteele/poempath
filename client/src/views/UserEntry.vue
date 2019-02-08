@@ -2,23 +2,29 @@
   <div>
     <q-card class="card">
       <div class="cardContents">
-        <p class="cardTitle"><b>Welcome to the poempath Survey</b></p>
-        <p>Please read each poem that is presented.<br><br>
+        <div class="cardTitle"><b>Welcome to the poempath Survey</b></div>
+        <div>Please read each poem that is presented.<br><br>
           If you enjoyed the poem, click:
           <br>
-          <q-btn class="btn" color="positive" icon="check_circle" label="For Me"/>
+          <div class="centerContainer">
+            <q-btn class="btn" color="positive" icon="check_circle" label="For Me"/>
+          </div>
           <br><br>
           If you did not enjoy the poem, or if you are indifferent towards it, click:
           <br>
-          <q-btn class="btn" color="negative" icon="block" label="Not For Me"/>
+          <div class="centerContainer">
+            <q-btn class="btn" color="negative" icon="block" label="Not For Me"/>
+          </div>
           <br><br>
           If there is an issue with the poem like a line missing click:
           <br>
-          <q-btn class="btn" color="secondary" icon="broken_image" label="Skip"/>
+          <div class="centerContainer">
+            <q-btn class="btn" color="secondary" icon="broken_image" label="Skip"/>
+          </div>
           <br><br>
           Go through as many poems as you would like, and thank you!
-        </p>
-        <div class="input-group">
+        </div>
+        <div class="input-group centerContainer">
           <vue-recaptcha
                   ref="recaptcha"
                   @verify="onCaptchaVerified"
@@ -127,17 +133,19 @@
   @import '~variables'
 
   .card
-    margin 10% 20%
-    border-radius 5px
+    margin 10% 10%
+    border-radius .75rem
     background-color $neutral
 
   .cardContents
-    padding 6vmin
-    font-size 4vmin
+    padding 1.5rem
+    font-size 2rem
+    @media only screen and (orientation: portrait)
+      font-size 1rem
 
   .cardTitle
-    font-size 5vmin
-    margin-bottom 4vmin
+    margin-bottom 1rem
+    font-size 2rem
 
   .logInButton
     margin-top 3%
@@ -149,10 +157,15 @@
     border-radius 0
 
   .btn
-    margin auto auto
-    font-size 3vmin
-    padding 2vmin
-    width 30vmin
+    width 14rem
+    margin-top 1rem
+    margin-left auto
+    margin-right auto
+    padding 1rem
+    font-size 1.5rem
+    @media only screen and (orientation: portrait)
+      font-size 1rem
+      width 10rem
 
 
 </style>

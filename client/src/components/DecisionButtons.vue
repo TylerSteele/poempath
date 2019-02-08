@@ -61,19 +61,26 @@
 </script>
 
 <style lang="stylus" scoped>
-  .decisionBtn
-    margin auto auto
-    font-size 3vmin
-    padding 2vmin
-    width 30vmin
-
-  .skipBtn
-    margin 3% auto 5% auto
-    padding 2vmin
-    width 30vmin
-    font-size 3vmin
   .active
     font-weight bold
+
+  .decisionBtn
+    margin auto auto
+    padding .25rem
+    width 14rem
+    font-size 1.5rem
+    @media only screen and (orientation: portrait)
+      width 8rem
+      font-size 1rem
+
+  .skipBtn
+    font-size 1.5rem
+    margin 3% auto 5% auto
+    padding .25em
+    width 14rem
+    @media only screen and (orientation: portrait)
+      width 8rem
+      font-size 1rem
 
 
 </style>
