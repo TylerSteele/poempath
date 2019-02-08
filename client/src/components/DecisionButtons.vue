@@ -69,16 +69,16 @@
     padding .25rem
     width 14rem
     font-size 1.5rem
-    @media only screen and (orientation: portrait)
-      width 8rem
+    @media only screen and (orientation portrait)
+      width 10rem
       font-size 1rem
 
   .skipBtn
     font-size 1.5rem
     margin 3% auto 5% auto
     padding .25em
-    width 14rem
-    @media only screen and (orientation: portrait)
+    width 12rem
+    @media only screen and (orientation portrait)
       width 8rem
       font-size 1rem
 
