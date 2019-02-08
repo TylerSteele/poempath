@@ -48,7 +48,7 @@
         }
       },
       currentUser() {
-        if(Object.keys(this.currentUser()).length === 0){
+        if(Object.keys(this.currentUser).length === 0){
           this.$router.replace({name: "introduction"})
         }
 
@@ -84,11 +84,11 @@
 
 <style lang="stylus">
   #appTitleBar
-    padding 3vmin
+    padding 1rem
   #appTitle
-    font-size 6vmin
+    font-size 3rem
   #q-app
-    margin-top 25vmin
+    margin-top 8rem
   .userSubtitle
-    font-size 4vmin
+    font-size 1.5rem
 </style>

@@ -25,16 +25,23 @@
 
 <style lang="stylus" scoped>
   .poemWrapper
-    margin-left 10vw
-    margin-right 10vw
+    margin-left 10%
+    margin-right 10%
     margin-top 25vmin
     min-height 60vh
+    @media only screen and (orientation: landscape)
+      margin-left 20%
+      margin-right 20%
   .titleText
-    font-size 6vmin
-    margin-bottom .5em
     font-weight bold
+    margin-bottom .5rem
+    font-size 4rem
+    @media only screen and (orientation: portrait)
+      font-size 3rem
   .authorText
-    font-size 5vmin
     margin-bottom 1em
+    font-size 2.75rem
+    @media only screen and (orientation: portrait)
+      font-size 2rem
 
 </style>

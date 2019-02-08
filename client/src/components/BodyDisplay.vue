@@ -20,12 +20,20 @@
 
 <style lang="stylus" scoped>
   ul
-    list-style-type none
     list-style-position outside
+    list-style-type none
     padding 0
-    padding-left 2em
     padding-bottom 1px
-    text-indent -2em
-    font-size 4vmin
-
+    padding-left 2rem
+    text-indent -2rem
+    font-size 2rem
+    @media only screen and (orientation: portrait)
+      font-size 1rem
+    /*@media screen and (min-width: 40em)
+      font-size 4rem
+    @media screen  and (max-width: 30em)
+      font-size 3rem
+    @media screen and (max-width: 20em)
+      font-size 2rem
+*/
 </style>
