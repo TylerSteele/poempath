@@ -5,24 +5,22 @@
         <div class="cardTitle"><b>Welcome to the poempath Survey</b></div>
         <div>Please read each poem that is presented.<br><br>
           If you enjoyed the poem, click:
-          <br>
-          <div class="centerContainer">
+          <div class="centerConditional">
             <q-btn class="btn" color="positive" icon="check_circle" label="For Me"/>
           </div>
-          <br><br>
+          <br><br><br>
           If you did not enjoy the poem, or if you are indifferent towards it, click:
-          <br>
-          <div class="centerContainer">
+          <div class="centerConditional">
             <q-btn class="btn" color="negative" icon="block" label="Not For Me"/>
           </div>
-          <br><br>
+          <br><br><br>
           If there is an issue with the poem like a line missing click:
-          <br>
-          <div class="centerContainer">
+          <div class="centerConditional">
             <q-btn class="btn" color="secondary" icon="broken_image" label="Skip"/>
           </div>
-          <br><br>
+          <br><br><br>
           Go through as many poems as you would like, and thank you!
+          <br><br>
         </div>
         <div class="input-group centerContainer">
           <vue-recaptcha
@@ -30,6 +28,7 @@
                   @verify="onCaptchaVerified"
                   @expired="onCaptchaExpired"
                   size="invisible"
+                  hidden
                   sitekey="6LcSLY8UAAAAAFOG_d7LsMdQsVoMBqqNzerAJIoH
 ">
           </vue-recaptcha>
@@ -140,8 +139,8 @@
   .cardContents
     padding 1.5rem
     font-size 2rem
-    @media only screen and (orientation: portrait)
-      font-size 1rem
+    @media only screen and (orientation portrait)
+      font-size 1.25rem
 
   .cardTitle
     margin-bottom 1rem
@@ -158,14 +157,22 @@
 
   .btn
     width 14rem
-    margin-top 1rem
     margin-left auto
     margin-right auto
-    padding 1rem
+    padding .25rem
     font-size 1.5rem
-    @media only screen and (orientation: portrait)
+    @media only screen and (orientation portrait)
       font-size 1rem
       width 10rem
+    @media only screen and (orientation landscape)
+      float right
+
+  .centerConditional
+    @media only screen and (orientation portrait)
+      align-items center
+      display flex
+      justify-content center
+      padding-top 1rem
 
 
 </style>

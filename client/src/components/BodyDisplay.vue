@@ -27,7 +27,7 @@
     padding-left 2rem
     text-indent -2rem
     font-size 2rem
-    @media only screen and (orientation: portrait)
+    @media only screen and (orientation portrait)
       font-size 1rem
     /*@media screen and (min-width: 40em)
       font-size 4rem
