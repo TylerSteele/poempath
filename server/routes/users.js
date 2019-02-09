@@ -15,8 +15,8 @@ module.exports = ({router}) => {
     }
     // Check to see if sessionID is blank
     else if (ctx.request.body.sessionID === '') {
-        ctx.body = {message: 'sessionIDBlank'}
-        ctx.status = 422
+      ctx.body = {message: 'sessionIDBlank'}
+      ctx.status = 422
     } else {
       const verifyCaptchaOptions = await {
         uri: 'https://www.google.com/recaptcha/api/siteverify',
@@ -116,7 +116,8 @@ module.exports = ({router}) => {
             password: await bcrypt.hash(ctx.request.body.password, 10),
             likedPoems: [],
             dislikedPoems: [],
-            poetryQueue: []
+            poetryQueue: [],
+            lastVote: Math.floor((new Date).getTime()) // Current time in milliseconds. User to prevent spamming
           })
           ctx.body = {message: 'userAdded'}
         }
@@ -193,21 +194,29 @@ module.exports = ({router}) => {
     let updatedUser = JSON.parse(JSON.stringify(ctx.request.body))
     // Delete the id and the password (if it exists)
     delete updatedUser._id
-    if(updatedUser.password)
-      delete updatedUser.password
-    let updateResponse = await app.users.updateOne(
-      {_id: ObjectId(ctx.request.body._id)},
-      {$set: updatedUser})
-    // Find the newly updated user and return that
-    updatedUser = await app.users.findOne({_id: ObjectId(ctx.request.body._id)})
-    if(updatedUser.password)
-      delete updatedUser.password
-    if (updatedUser) {
-      ctx.body = updatedUser
-      ctx.status = 200
+    let currentTime = Math.floor((new Date).getTime())
+    let lastVoteTime = Math.floor(updatedUser.lastVote)
+    if (Math.floor((currentTime - lastVoteTime)) < 3500) {
+      ctx.body = await app.users.findOne({_id: ObjectId(ctx.request.body._id)})
+      ctx.status = 422
     } else {
-      ctx.body = {message: 'userNotFound'}
-      ctx.stats = 404
+      updatedUser.lastVote = currentTime
+      if (updatedUser.password)
+        delete updatedUser.password
+      let updateResponse = await app.users.updateOne(
+        {_id: ObjectId(ctx.request.body._id)},
+        {$set: updatedUser})
+      // Find the newly updated user and return that
+      updatedUser = await app.users.findOne({_id: ObjectId(ctx.request.body._id)})
+      if (updatedUser.password)
+        delete updatedUser.password
+      if (updatedUser) {
+        ctx.body = updatedUser
+        ctx.status = 200
+      } else {
+        ctx.body = {message: 'userNotFound'}
+        ctx.stats = 404
+      }
     }
   })
 
