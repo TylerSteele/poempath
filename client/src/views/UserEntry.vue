@@ -3,23 +3,26 @@
     <q-card class="card">
       <div class="cardContents">
         <div class="cardTitle"><b>Welcome to the poempath survey</b></div>
-        <div>Please read each poem that is presented.<br><br>
-          If you enjoyed the poem, click:
+        <div>I plan to build a <a href="https://en.wikipedia.org/wiki/Recommender_system">recommendation engine</a>
+          that suggests poems to readers based on their history of preferences. To get started, I need some baseline
+          data that you can provide!
+          <br><br>
+          For each poem you enjoy, click "For Me"
           <div class="centerConditional">
             <q-btn class="btn" color="positive" icon="check_circle" label="For Me"/>
           </div>
           <br><br><br>
-          If you did not enjoy the poem, or if you are indifferent towards it, click:
+          For those you don't enjoy or are indifferent towards, click "Not For Me"
           <div class="centerConditional">
             <q-btn class="btn" color="negative" icon="block" label="Not For Me"/>
           </div>
           <br><br><br>
-          If there is an issue with the poem like a line missing click:
+          If there is an issue with a poem, like a line missing, click "Skip"
           <div class="centerConditional">
             <q-btn class="btn" color="secondary" icon="broken_image" label="Skip"/>
           </div>
           <br><br><br>
-          Go through as many poems as you would like, and thank you!
+          Rate as many poems as you would like, and thank you!
           <br><br>
         </div>
         <div class="input-group centerContainer">
@@ -33,10 +36,11 @@
 ">
           </vue-recaptcha>
           <q-btn
-                  class="btn"
+                  class="btn signUpButton"
                   @click="submit"
                   color="secondary"
-                  label="Okay"
+                  label="Embark"
+                  icon="call_split"
                   :loading="entryLoading"
                   type="submit">
             <q-spinner slot="loading"/>
@@ -178,6 +182,7 @@
       width 10rem
     @media only screen and (orientation landscape)
       float right
+      margin-right 6rem
 
   .centerConditional
     @media only screen and (orientation portrait)
