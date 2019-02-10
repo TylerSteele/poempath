@@ -6,6 +6,61 @@ const {ObjectId} = require('mongodb')
 require('../mongo')(app)
 module.exports = ({router}) => {
 
+  // Create a survey user given sessionID and recaptcha token
+  router.post('/survey', async (ctx) => {
+    // Check to see if the request lacks a recaptcha token
+    if (!ctx.request.body.recaptchaToken) {
+      ctx.body = {message: 'recaptchaTokenRequired'}
+      ctx.status = 422
+    }
+    // Check to see if sessionID is blank
+    else if (ctx.request.body.sessionID === '') {
+      ctx.body = {message: 'sessionIDBlank'}
+      ctx.status = 422
+    } else {
+      const verifyCaptchaOptions = await {
+        uri: 'https://www.google.com/recaptcha/api/siteverify',
+        json: true,
+        form: {
+          secret: process.env.CAPTCHA_SECRET,
+          response: ctx.request.body.recaptchaToken
+        }
+      }
+      const captchaVerified = await request.post(verifyCaptchaOptions, function (err, response, body) {
+          if (err) {
+            ctx.status = 500
+            ctx.body = {message: 'captchaError'}
+            return false
+          } else if (!body.success) {
+            ctx.status = 500
+            ctx.body = {message: 'captchaFailed'}
+            return false
+          }
+          return true
+        }
+      )
+      if (captchaVerified) {
+        // Check to see if a user exists with given sessionID
+        let existingUser = await app.users.findOne({username: ctx.request.body.sessionID})
+        // If so, return message and 409 status
+        if (existingUser) {
+          ctx.body = {message: 'usernameExists'}
+          ctx.status = 409
+        } else {
+          // Use bcrypt to encrypt the password and store it with the new user
+          app.users.insertOne({
+            username: ctx.request.body.sessionID,
+            likedPoems: [],
+            skippedPoems: [],
+            dislikedPoems: []
+          })
+          ctx.body = {message: 'surveyAdded'}
+        }
+      }
+    }
+    console.log(ctx.body)
+  })
+
   // Create a new user given username and password
   router.post('/signUp', async (ctx) => {
     // Check to see if the request lacks a recaptcha token
@@ -61,7 +116,8 @@ module.exports = ({router}) => {
             password: await bcrypt.hash(ctx.request.body.password, 10),
             likedPoems: [],
             dislikedPoems: [],
-            poetryQueue: []
+            poetryQueue: [],
+            lastVote: Math.floor((new Date).getTime()) // Current time in milliseconds. User to prevent spamming
           })
           ctx.body = {message: 'userAdded'}
         }
@@ -130,7 +186,6 @@ module.exports = ({router}) => {
         }
       }
     }
-    console.log(ctx.body)
   })
 
   // Update user
@@ -139,34 +194,29 @@ module.exports = ({router}) => {
     let updatedUser = JSON.parse(JSON.stringify(ctx.request.body))
     // Delete the id and the password (if it exists)
     delete updatedUser._id
-    delete updatedUser.password
-    let updateResponse = await app.users.updateOne(
-      {_id: ObjectId(ctx.request.body._id)},
-      {$set: updatedUser})
-    console.log(updateResponse.result)
-    // Find the newly updated user and return that
-    updatedUser = await app.users.findOne({_id: ObjectId(ctx.request.body._id)})
-    delete updatedUser.password
-    console.log(updatedUser)
-    if (updatedUser) {
-      ctx.body = updatedUser
-      ctx.status = 200
+    let currentTime = Math.floor((new Date).getTime())
+    let lastVoteTime = Math.floor(updatedUser.lastVote)
+    if (Math.floor((currentTime - lastVoteTime)) < 3500) {
+      ctx.body = await app.users.findOne({_id: ObjectId(ctx.request.body._id)})
+      ctx.status = 422
     } else {
-      ctx.body = {message: 'userNotFound'}
-      ctx.stats = 404
-    }
-  })
-
-  // Delete user
-  router.delete('/:userID', async (ctx) => {
-    let userToDelete = await app.users.findOne({_id: ObjectId(ctx.params.userID)})
-    if (!userToDelete) {
-      ctx.body = {message: 'userNotFound'}
-      ctx.status = 404
-    } else {
-      app.users.deleteOne({_id: ObjectId(ctx.params.userID)})
-      console.log(`Username: ${ userToDelete.username } deleted`)
-      ctx.body = `Successfully deleted user ${ userToDelete.username }`
+      updatedUser.lastVote = currentTime
+      if (updatedUser.password)
+        delete updatedUser.password
+      let updateResponse = await app.users.updateOne(
+        {_id: ObjectId(ctx.request.body._id)},
+        {$set: updatedUser})
+      // Find the newly updated user and return that
+      updatedUser = await app.users.findOne({_id: ObjectId(ctx.request.body._id)})
+      if (updatedUser.password)
+        delete updatedUser.password
+      if (updatedUser) {
+        ctx.body = updatedUser
+        ctx.status = 200
+      } else {
+        ctx.body = {message: 'userNotFound'}
+        ctx.stats = 404
+      }
     }
   })
 

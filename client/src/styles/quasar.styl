@@ -3,9 +3,36 @@
 // @import '~quasar-addon-styl'
 
 body
-  background-color: $tertiary
+  background-color $tertiary
   font-family 'Lato', sans-serif
   -webkit-font-smoothing antialiased
   -moz-osx-font-smoothing grayscale
   color $fontPrimary
   margin-top 60px
+  min-height 50vh
+
+.centerContainer
+  display flex
+  justify-content center
+  align-items center
+
+.q-field
+  max-width 90%
+  margin auto
+  input
+    height 2.5rem
+    font-size 2rem
+    @media only screen and (orientation portrait)
+      font-size 1.5rem
+
+.q-field-label-inner
+  vertical-align center
+  color: $fontPrimary
+  padding-left .75rem
+  font-size 2rem
+  @media only screen and (orientation portrait)
+    font-size 1.5rem
+
+.q-tabs-position-top
+  .q-tabs-head .q-tabs-bar
+    border-bottom-width .3rem

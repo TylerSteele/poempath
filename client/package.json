@@ -14,6 +14,7 @@
     "vue": "^2.5.22",
     "vue-recaptcha": "^1.1.1",
     "vue-router": "^3.0.2",
+    "vue-session": "^1.0.0",
     "vuex": "^3.1.0"
   },
   "devDependencies": {

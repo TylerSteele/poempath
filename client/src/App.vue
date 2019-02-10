@@ -2,17 +2,22 @@
   <q-layout id="q-app" view="lHh Lpr lFf">
     <q-layout-header>
       <q-toolbar
+              id="appTitleBar"
               color="primary"
               :inverted="$q.theme === 'ios'"
       >
-        <q-toolbar-title>
+        <q-toolbar-title id="appTitle">
           poempath
-          <div v-if="loggedIn" slot="subtitle">Poetry for
-            {{currentUser.username}}
+          <div class="userSubtitle" v-if="loggedIn" slot="subtitle">Poetry for {{currentUser.username}}
           </div>
         </q-toolbar-title>
-        <router-link tag="q-btn" v-if="loggedIn" to="/welcome"
-                     v-on:click.native="setUserStatus(false)" replace>Log Out
+        <router-link
+                tag="q-btn"
+                class="logOutButton"
+                v-if="loggedIn"
+                to="/welcome"
+                v-on:click.native="setUserStatus(false)"
+                replace>Log Out
         </router-link>
       </q-toolbar>
     </q-layout-header>
@@ -92,5 +97,25 @@
 </script>
 
 <style lang="stylus">
+  #appTitleBar
+    padding 1rem
+    @media only screen and (orientation portrait)
+      padding .5rem
+
+  #appTitle
+    font-size 2.5rem
+    @media only screen and (orientation portrait)
+      font-size 1.5rem
+
+  #q-app
+    min-height 80vh
+
+  .logOutButton div
+    font-size 1.2rem
+
+  .userSubtitle
+    font-size 1.5rem
+    @media only screen and (orientation portrait)
+      font-size 1rem
 
 </style>

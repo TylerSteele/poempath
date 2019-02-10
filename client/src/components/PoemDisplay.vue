@@ -27,10 +27,21 @@
   .poemWrapper
     margin-left 10%
     margin-right 10%
+    margin-top 25vmin
+    min-height 60vh
+    @media only screen and (orientation landscape)
+      margin-left 20%
+      margin-right 20%
   .titleText
-    font-size 2em
+    font-weight bold
+    margin-bottom .5rem
+    font-size 4rem
+    @media only screen and (orientation portrait)
+      font-size 2rem
   .authorText
-    font-size 1.25em
-    margin-bottom 10%
+    margin-bottom 1em
+    font-size 2.75rem
+    @media only screen and (orientation portrait)
+      font-size 1.5rem
 
 </style>

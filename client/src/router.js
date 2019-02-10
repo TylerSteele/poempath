@@ -16,8 +16,8 @@ export default new VueRouter({
       }
     },
     {
-      path: "/welcome",
-      name: "welcome",
+      path: '/welcome',
+      name: 'welcome',
       component: UserEntry
     },
     {

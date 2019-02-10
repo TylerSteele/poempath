@@ -7,7 +7,7 @@
         <q-tab slot="title" name="signUpTab">Sign Up</q-tab>
       </q-tabs>
       <div class="cardContents">
-        <div class="cardTitle">Welcome to poempath</div>
+        <div class="cardTitle"><b>Welcome to the poempath</b></div>
         <q-field :error="usernameError" :error-label="usernameErrorLabel"
                  label="User Name" :count="24">
           <q-input @focus="usernameError = false" @keyup.enter="submit"
@@ -26,31 +26,42 @@
                   @verify="onCaptchaVerified"
                   @expired="onCaptchaExpired"
                   size="invisible"
+                  hidden
                   sitekey="6LcLvo0UAAAAABm2eK9s-uDHDU3WZnxcPH8DtbBe">
           </vue-recaptcha>
-          <q-btn
-                  @click="submit"
-                  v-if="isActiveTab('logInTab')"
-                  :loading="logInLoading"
-                  color="secondary"
-                  class="logInButton"
-                  type="submit">
-            Log In
-            <q-spinner slot="loading"/>
-          </q-btn>
-          <q-btn
-                  @click="submit"
-                  v-if="isActiveTab('signUpTab')"
-                  :loading="signUpLoading"
-                  color="secondary"
-                  class="signUpButton"
-                  type="submit">
-            Sign Up
-            <q-spinner slot="loading"/>
-          </q-btn>
+          <div class="centerConditional">
+            <q-btn
+                    @click="submit"
+                    v-if="isActiveTab('logInTab')"
+                    :loading="logInLoading"
+                    color="secondary"
+                    class="btn logInButton"
+                    type="submit">
+              Log In
+              <q-spinner slot="loading"/>
+            </q-btn>
+            <q-btn
+                    @click="submit"
+                    v-if="isActiveTab('signUpTab')"
+                    :loading="signUpLoading"
+                    color="secondary"
+                    class="btn signUpButton"
+                    type="submit">
+              Sign Up
+              <q-spinner slot="loading"/>
+            </q-btn>
+          </div>
         </div>
       </div>
     </q-card>
+
+    <div class="centerContainer recaptchaMessage">
+      <div>
+        This site is protected by reCAPTCHA and the Google
+        <a href="https://policies.google.com/privacy">Privacy Policy</a> and
+        <a href="https://policies.google.com/terms">Terms of Service</a> apply.
+      </div>
+    </div>
   </div>
 </template>
 
@@ -70,6 +81,7 @@
     },
     data() {
       return {
+        entryLoading: false,
         username: '',
         password: '',
         usernameError: false,
@@ -91,7 +103,7 @@
         return this.activeTab === tab
       },
       submit() {
-        console.log('Button clicked!')
+        this.entryLoading = true
         this.$refs.recaptcha.execute()
       },
       logIn(recaptchaToken) {
@@ -185,7 +197,6 @@
             position: 'top'
           })
         }
-
       },
       signUp(recaptchaToken) {
         this.signUpLoading = true
@@ -215,7 +226,7 @@
               this.$store.dispatch('loadCurrentUser', signUpUsername)
               window.scrollTo(0, 0)
               // If successful, go to the introduction view
-              this.$router.replace({name: "introduction"})
+              this.$router.replace({name: "home"})
             }
             // Otherwise, inform user why log in failed
             else if (data.message === 'usernameTaken') {
@@ -265,7 +276,6 @@
             position: 'top'
           })
         }
-
       },
       onCaptchaVerified: function (recaptchaToken) {
         if (this.activeTab === 'logInTab') {
@@ -273,7 +283,6 @@
         } else if (this.activeTab === 'signUpTab') {
           this.signUp(recaptchaToken)
         }
-
       },
       onCaptchaExpired: function () {
         this.$refs.recaptcha.reset();
@@ -285,17 +294,29 @@
 <style lang="stylus" scoped>
   @import '~variables'
 
+  .q-tab
+    font-size 1.5rem
+    padding 1 rem
+
   .card
-    margin 10% 20%
-    border-radius 5px
+    margin-left 10%
+    margin-right 10%
+    margin-top 10%
+    border-radius .75rem
     background-color $neutral
+    @media only screen and (orientation portrait)
+      margin-top 20%
 
   .cardContents
-    padding 10%
+    padding 3rem
+    font-size 2rem
+    @media only screen and (orientation portrait)
+      font-size 1.25rem
+      padding 1.5rem
 
   .cardTitle
-    font-size 130%
-    margin-bottom 10%
+    margin-bottom 1rem
+    font-size 2rem
 
   .logInButton
     margin-top 3%
@@ -306,5 +327,30 @@
   .tabRow
     border-radius 0
 
+  .btn
+    width 14rem
+    margin-left auto
+    margin-right auto
+    padding .25rem
+    font-size 1.5rem
+    @media only screen and (orientation portrait)
+      font-size 1rem
+      width 10rem
+    @media only screen and (orientation landscape)
+      float right
+      margin-right 6rem
+
+  .centerConditional
+    display flex
+    padding-top 1rem
+    @media only screen and (orientation portrait)
+      align-items center
+      display flex
+      justify-content center
+      padding-top 1rem
+
+
+  .recaptchaMessage
+    padding-top 2rem
 
 </style>
