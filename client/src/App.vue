@@ -8,9 +8,17 @@
       >
         <q-toolbar-title id="appTitle">
           poempath
-          <div class="userSubtitle" v-if="loggedIn" slot="subtitle">Data Collection
+          <div class="userSubtitle" v-if="loggedIn" slot="subtitle">Poetry for {{currentUser.username}}
           </div>
         </q-toolbar-title>
+        <router-link
+                tag="q-btn"
+                class="logOutButton"
+                v-if="loggedIn"
+                to="/welcome"
+                v-on:click.native="setUserStatus(false)"
+                replace>Log Out
+        </router-link>
       </q-toolbar>
     </q-layout-header>
 
@@ -48,10 +56,16 @@
         }
       },
       currentUser() {
-        if (Object.keys(this.currentUser).length === 0) {
-          this.$router.replace({name: "introduction"})
+        if (Object.keys(this.currentUser).length > 0) {
+          // If the current user does not have any like/dislike history
+          if (!this.currentUser.likedPoems && !this.currentUser.dislikedPoems) {
+            this.$router.replace({name: "introduction"})
+          } else {
+            if (this.currentUser.likedPoems.length === 0 && this.currentUser.dislikedPoems.length === 0) {
+              this.$router.replace({name: "introduction"})
+            }
+          }
         }
-
       }
     },
     methods: {
@@ -72,7 +86,7 @@
       recaptchaScript.defer = true
       document.head.appendChild(recaptchaScript)
       if (!this.loggedIn) {
-        this.$router.replace({name: "introduction"})
+        this.$router.replace({name: "welcome"})
       }
       if (Object.keys(this.currentPoem).length === 0) {
         // Make the API Request for the poem - this logic will change when connected to the NN
@@ -95,6 +109,9 @@
 
   #q-app
     min-height 80vh
+
+  .logOutButton div
+    font-size 1.2rem
 
   .userSubtitle
     font-size 1.5rem
