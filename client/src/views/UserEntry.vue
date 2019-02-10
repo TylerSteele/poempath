@@ -1,53 +1,60 @@
 <template>
   <div>
     <q-card class="card">
+      <q-tabs v-model="activeTab" underline-color="secondary" color="primary"
+              class="tabRow">
+        <q-tab slot="title" name="logInTab">Log In</q-tab>
+        <q-tab slot="title" name="signUpTab">Sign Up</q-tab>
+      </q-tabs>
       <div class="cardContents">
-        <div class="cardTitle"><b>Welcome to the poempath survey</b></div>
-        <div>I plan to build a <a href="https://en.wikipedia.org/wiki/Recommender_system">recommendation engine</a>
-          that suggests poems to readers based on their history of preferences. To get started, I need some baseline
-          data that you can provide!
-          <br><br>
-          For each poem you enjoy, click "For Me"
-          <div class="centerConditional">
-            <q-btn class="btn" color="positive" icon="check_circle" label="For Me"/>
-          </div>
-          <br><br><br>
-          For those you don't enjoy or are indifferent towards, click "Not For Me"
-          <div class="centerConditional">
-            <q-btn class="btn" color="negative" icon="block" label="Not For Me"/>
-          </div>
-          <br><br><br>
-          If there is an issue with a poem, like a line missing, click "Skip"
-          <div class="centerConditional">
-            <q-btn class="btn" color="secondary" icon="broken_image" label="Skip"/>
-          </div>
-          <br><br><br>
-          Rate as many poems as you would like, and thank you!
-          <br><br>
-        </div>
-        <div class="input-group centerContainer">
+        <div class="cardTitle"><b>Welcome to the poempath</b></div>
+        <q-field :error="usernameError" :error-label="usernameErrorLabel"
+                 label="User Name" :count="24">
+          <q-input @focus="usernameError = false" @keyup.enter="submit"
+                   v-model="username"
+                   maxlength="24"/>
+        </q-field>
+        <q-field :error="passwordError" :error-label="passwordErrorLabel"
+                 label="Password" :count="100">
+          <q-input @focus="passwordError = false" @keyup.enter="submit"
+                   type="password"
+                   v-model="password" maxlength="100"/>
+        </q-field>
+        <div class="input-group">
           <vue-recaptcha
                   ref="recaptcha"
                   @verify="onCaptchaVerified"
                   @expired="onCaptchaExpired"
                   size="invisible"
                   hidden
-                  sitekey="6LcSLY8UAAAAAFOG_d7LsMdQsVoMBqqNzerAJIoH
-">
+                  sitekey="6LcLvo0UAAAAABm2eK9s-uDHDU3WZnxcPH8DtbBe">
           </vue-recaptcha>
-          <q-btn
-                  class="btn signUpButton"
-                  @click="submit"
-                  color="secondary"
-                  label="Embark"
-                  icon="call_split"
-                  :loading="entryLoading"
-                  type="submit">
-            <q-spinner slot="loading"/>
-          </q-btn>
+          <div class="centerConditional">
+            <q-btn
+                    @click="submit"
+                    v-if="isActiveTab('logInTab')"
+                    :loading="logInLoading"
+                    color="secondary"
+                    class="btn logInButton"
+                    type="submit">
+              Log In
+              <q-spinner slot="loading"/>
+            </q-btn>
+            <q-btn
+                    @click="submit"
+                    v-if="isActiveTab('signUpTab')"
+                    :loading="signUpLoading"
+                    color="secondary"
+                    class="btn signUpButton"
+                    type="submit">
+              Sign Up
+              <q-spinner slot="loading"/>
+            </q-btn>
+          </div>
         </div>
       </div>
     </q-card>
+
     <div class="centerContainer recaptchaMessage">
       <div>
         This site is protected by reCAPTCHA and the Google
@@ -60,6 +67,7 @@
 
 <script>
   import QBtn from 'quasar-framework/src/components/btn/QBtn'
+  import QTab from 'quasar-framework/src/components/tab/QTab'
   import VueRecaptcha from 'vue-recaptcha'
   import { UserAPI } from '../services/api/UserAPI'
   import { mapActions } from 'vuex'
@@ -68,69 +76,213 @@
     name: "UserEntry",
     components: {
       QBtn,
+      QTab,
       'vue-recaptcha': VueRecaptcha
     },
     data() {
       return {
         entryLoading: false,
+        username: '',
+        password: '',
+        usernameError: false,
+        passwordError: false,
+        usernameErrorLabel: 'Required',
+        passwordErrorLabel: 'Required',
+        logInLoading: false,
+        signUpLoading: false,
         currentNotification: null,        // Ensure only one notification is present. Calling one like a function
                                           // this.currentNotification() dismisses it (see Quasar docs on notify)
+        activeTab: 'logInTab'
       }
     },
     methods: {
       ...mapActions([
         'loadCurrentUser'
       ]),
+      isActiveTab(tab) {
+        return this.activeTab === tab
+      },
       submit() {
         this.entryLoading = true
         this.$refs.recaptcha.execute()
       },
-      onCaptchaVerified: function (recaptchaToken) {
-        this.$session.start()
-        let sessionID = this.$session.id()
-        // All sessionIDs start with "sess:" so remove that
-        sessionID = sessionID.slice(5, sessionID.length)
+      logIn(recaptchaToken) {
+        this.logInLoading = true
+        let logInUsername = this.username.trim()
+        let logInPassword = this.password
         this.$refs.recaptcha.reset();
-        // Send captcha token and username and password to server.
-        UserAPI.createSurveyUser(sessionID, recaptchaToken).then((data) => {
-          // Handle response accordingly
-          if (data.message === 'surveyAdded') {
-            if (this.currentNotification)
-              this.currentNotification()
-            this.entryLoading = false
-            // If successful, go to the home view
-            this.$router.replace({name: "home"})
-            this.$store.dispatch('loadCurrentUser', sessionID)
-            window.scrollTo(0, 0)
-            this.$emit('loggedIn', true)
-          }
-          // Otherwise, inform user why log in failed
-          else if (data.message === 'sessionIDBlank') {
-            this.entryLoading = false
-            if (this.currentNotification)
-              this.currentNotification()
-            this.currentNotification = this.$q.notify({
-              message: 'That username is taken. Please try another',
-              timeout: 1200,
-              color: 'warning',
-              icon: 'error',
-              position: 'top'
-            })
-          } else if (data.message === 'recaptchaTokenRequired' ||
-            data.message === 'captchaError' ||
-            data.message === 'captchaFailed') {
-            this.entryLoading = false
-            if (this.currentNotification)
-              this.currentNotification()
-            this.currentNotification = this.$q.notify({
-              message: 'ReCaptcha verification error. Please reload the page and try again.',
-              timeout: 1200,
-              color: 'negative',
-              icon: 'block',
-              position: 'top'
-            })
-          }
-        })
+        if (logInUsername !== '' && logInPassword !== '') {
+          // Send captcha token and username and password to server.
+          UserAPI.validateUser(logInUsername, logInPassword, recaptchaToken).then((data) => {
+            // Handle response accordingly
+            if (data.message === 'accessGranted') {
+              if (this.currentNotification)
+                this.currentNotification()
+              this.currentNotification = this.$q.notify({
+                message: `Welcome, ${ logInUsername }`,
+                timeout: 1200,
+                color: 'positive',
+                icon: 'person',
+                position: 'top'
+              })
+              this.usernameError = false
+              this.passwordError = false
+              this.usernameErrorLabel = 'Required'
+              this.passwordErrorLabel = 'Required'
+              this.logInLoading = false
+              this.$emit('loggedIn', true)
+              this.$store.dispatch('loadCurrentUser', logInUsername)
+              window.scrollTo(0, 0)
+              // If successful, go to the home view
+              this.$router.replace({name: "home"})
+            }
+            // Otherwise, inform user why log in failed
+            else if (data.message === 'incorrectPassword') {
+              this.passwordError = true
+              this.passwordErrorLabel = 'Incorrect Password'
+              this.logInLoading = false
+              if (this.currentNotification)
+                this.currentNotification()
+              this.currentNotification = this.$q.notify({
+                message: 'Password is incorrect.',
+                timeout: 1200,
+                color: 'negative',
+                icon: 'error',
+                position: 'top'
+              })
+            }
+            else if (data.message === 'userNotFound') {
+              this.usernameError = true
+              this.usernameErrorLabel = 'User not found'
+              this.logInLoading = false
+              if (this.currentNotification)
+                this.currentNotification()
+              this.currentNotification = this.$q.notify({
+                message: 'This username does not exist. Please create an account.',
+                timeout: 1200,
+                color: 'warning',
+                icon: 'warning',
+                position: 'top'
+              })
+            } else if (data.message === 'recaptchaTokenRequired' ||
+              data.message === 'captchaError' ||
+              data.message === 'captchaFailed') {
+              this.logInLoading = false
+              if (this.currentNotification)
+                this.currentNotification()
+              this.currentNotification = this.$q.notify({
+                message: 'ReCaptcha verification error. Please reload the page and try again.',
+                timeout: 1200,
+                color: 'negative',
+                icon: 'block',
+                position: 'top'
+              })
+            }
+          })
+        } else {
+          if (logInUsername === '')
+            this.usernameError = true
+          if (logInPassword === '')
+            this.passwordError = true
+          this.usernameErrorLabel = 'Required'
+          this.passwordErrorLabel = 'Required'
+          this.logInLoading = false
+          if (this.currentNotification)
+            this.currentNotification()
+          this.currentNotification = this.$q.notify({
+            message: 'Username and password are required.',
+            timeout: 1200,
+            color: 'negative',
+            icon: 'error',
+            position: 'top'
+          })
+        }
+      },
+      signUp(recaptchaToken) {
+        this.signUpLoading = true
+        let signUpUsername = this.username.trim()
+        let signUpPassword = this.password
+        this.$refs.recaptcha.reset();
+        if (signUpUsername !== '' && this.password !== '') {
+          // Send captcha token and username and password to server.
+          UserAPI.createUser(signUpUsername, signUpPassword, recaptchaToken).then((data) => {
+            // Handle response accordingly
+            if (data.message === 'userAdded') {
+              if (this.currentNotification)
+                this.currentNotification()
+              this.currentNotification = this.$q.notify({
+                message: `Account created. Welcome, ${ signUpUsername }`,
+                timeout: 1200,
+                color: 'positive',
+                icon: 'person',
+                position: 'top'
+              })
+              this.usernameError = false
+              this.passwordError = false
+              this.usernameErrorLabel = 'Required'
+              this.passwordErrorLabel = 'Required'
+              this.signUpLoading = false
+              this.$emit('loggedIn', true)
+              this.$store.dispatch('loadCurrentUser', signUpUsername)
+              window.scrollTo(0, 0)
+              // If successful, go to the introduction view
+              this.$router.replace({name: "home"})
+            }
+            // Otherwise, inform user why log in failed
+            else if (data.message === 'usernameTaken') {
+              this.usernameError = true
+              this.usernameErrorLabel = 'Username taken'
+              this.signUpLoading = false
+              if (this.currentNotification)
+                this.currentNotification()
+              this.currentNotification = this.$q.notify({
+                message: 'That username is taken. Please try another',
+                timeout: 1200,
+                color: 'warning',
+                icon: 'error',
+                position: 'top'
+              })
+            }
+            else if (data.message === 'recaptchaTokenRequired' ||
+              data.message === 'captchaError' ||
+              data.message === 'captchaFailed') {
+              this.signUpLoading = false
+              if (this.currentNotification)
+                this.currentNotification()
+              this.currentNotification = this.$q.notify({
+                message: 'ReCaptcha verification error. Please reload the page and try again.',
+                timeout: 1200,
+                color: 'negative',
+                icon: 'block',
+                position: 'top'
+              })
+            }
+          })
+        } else {
+          if (signUpUsername === '')
+            this.usernameError = true
+          if (signUpPassword === '')
+            this.passwordError = true
+          this.usernameErrorLabel = 'Required'
+          this.passwordErrorLabel = 'Required'
+          this.signUpLoading = false
+          if (this.currentNotification)
+            this.currentNotification()
+          this.currentNotification = this.$q.notify({
+            message: 'Username and password are required.',
+            timeout: 1200,
+            color: 'negative',
+            icon: 'error',
+            position: 'top'
+          })
+        }
+      },
+      onCaptchaVerified: function (recaptchaToken) {
+        if (this.activeTab === 'logInTab') {
+          this.logIn(recaptchaToken)
+        } else if (this.activeTab === 'signUpTab') {
+          this.signUp(recaptchaToken)
+        }
       },
       onCaptchaExpired: function () {
         this.$refs.recaptcha.reset();
@@ -141,6 +293,10 @@
 
 <style lang="stylus" scoped>
   @import '~variables'
+
+  .q-tab
+    font-size 1.5rem
+    padding 1 rem
 
   .card
     margin-left 10%
@@ -185,6 +341,8 @@
       margin-right 6rem
 
   .centerConditional
+    display flex
+    padding-top 1rem
     @media only screen and (orientation portrait)
       align-items center
       display flex

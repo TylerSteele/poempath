@@ -40,8 +40,14 @@ export default new VueX.Store({
       // API returns an array of length 1 (depends on the route, may need to change
       let newPoemArray = await PoetryAPI.getPoem()
         .catch(err => console.log(err))
-      commit('SET_CURRENT_POEM', newPoemArray[0])
-      commit('SET_IS_LOADING', false)
+      if(newPoemArray.length === 0) {
+        console.log('No poems available')
+        commit('SET_CURRENT_POEM', {title: 'No poetry available', author: 'Sorry for the inconvenience', text: ['']})
+        commit('SET_IS_LOADING', false)
+      } else {
+        commit('SET_CURRENT_POEM', newPoemArray[0])
+        commit('SET_IS_LOADING', false)
+      }
 
     },
     async updateUser({commit}, updatedUser) {

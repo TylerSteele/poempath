@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import UserEntry from './views/UserEntry'
 import PrimaryView from './views/PrimaryView'
+import UserIntroduction from './views/UserIntroduction'
 
 Vue.use(VueRouter)
 
@@ -11,8 +12,13 @@ export default new VueRouter({
     {
       path: '/',
       redirect: {
-        name: "introduction"
+        name: "welcome"
       }
+    },
+    {
+      path: '/welcome',
+      name: 'welcome',
+      component: UserEntry
     },
     {
       path: "/home",
@@ -22,7 +28,7 @@ export default new VueRouter({
     {
       path: "/introduction",
       name: "introduction",
-      component: UserEntry
+      component: UserIntroduction
     }
   ]
 })
