@@ -37,4 +37,10 @@ export class PoetryAPI {
     return {title: 'Invalid rating', author: 'Sorry for the inconvenience', text: ['']}
 
   }
+
+  static async getStats(){
+    return await axios
+      .get(API_URL + '/stats')
+      .then(response => response.data)
+  }
 }

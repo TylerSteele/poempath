@@ -23,7 +23,13 @@
     </q-layout-header>
 
     <q-page-container style="padding: 0">
+      <transition
+              appear
+              enter-active-class="animated fadeIn"
+              leave-active-class="animated fadeOut"
+      >
       <router-view @loggedIn="setUserStatus" :poem="currentPoem"/>
+      </transition>
     </q-page-container>
   </q-layout>
 </template>
@@ -85,12 +91,8 @@
       recaptchaScript.async = true
       recaptchaScript.defer = true
       document.head.appendChild(recaptchaScript)
-      if (!this.loggedIn) {
+      if (!this.loggedIn && !(this.$route.name === 'stats')) {
         this.$router.replace({name: "welcome"})
-      }
-      if (Object.keys(this.currentPoem).length === 0) {
-        // Make the API Request for the poem - this logic will change when connected to the NN
-        this.$store.dispatch('loadCurrentPoem')
       }
     }
   }

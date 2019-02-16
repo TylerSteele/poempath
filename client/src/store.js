@@ -9,7 +9,8 @@ export default new VueX.Store({
   state: {
     isLoading: false,
     currentUser: {},
-    currentPoem: {}
+    currentPoem: {},
+    stats: {}
   },
   mutations: {
     SET_IS_LOADING(state, status) {
@@ -20,6 +21,9 @@ export default new VueX.Store({
     },
     SET_CURRENT_POEM(state, newPoem) {
       state.currentPoem = newPoem
+    },
+    SET_STATS(state, newStats) {
+      state.stats = newStats
     }
 
   },
@@ -35,7 +39,7 @@ export default new VueX.Store({
         commit('SET_IS_LOADING', false)
       }
     },
-    async loadCurrentPoem({commit}) {
+    async loadRandomPoem({commit}) {
       commit('SET_IS_LOADING', true)
       // API returns an array of length 1 (depends on the route, may need to change
       let newPoemArray = await PoetryAPI.getPoem()
@@ -50,6 +54,13 @@ export default new VueX.Store({
       }
 
     },
+    async loadStats({commit}) {
+      commit('SET_IS_LOADING', true)
+      let statsData = await PoetryAPI.getStats()
+        .catch(err => console.log(err))
+      commit('SET_STATS', statsData)
+      commit('SET_IS_LOADING', false)
+    },
     async updateUser({commit}, updatedUser) {
       commit('SET_IS_LOADING', true)
       let newUser = await UserAPI.updateUser(updatedUser)
@@ -60,7 +71,6 @@ export default new VueX.Store({
     async ratePoem({state, commit}, ratingArray) {
       commit('SET_IS_LOADING', true)
       let newPoem = await PoetryAPI.ratePoem(ratingArray[0], state.currentPoem._id, ratingArray[1])
-      console.log(newPoem)
       if (Object.keys(newPoem).length === 0) {
         console.log('No poems available')
         commit('SET_CURRENT_POEM', {title: 'No poetry available', author: 'Sorry for the inconvenience', text: ['']})

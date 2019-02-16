@@ -40,7 +40,7 @@
           updatedUser.skippedPoems = [this.currentPoem]
         }
         this.$store.dispatch('updateUser', updatedUser)
-        this.$store.dispatch('loadCurrentPoem')
+        this.$store.dispatch('loadRandomPoem')
         window.scrollTo(0, 0)
       },
       rejectAlert() {
