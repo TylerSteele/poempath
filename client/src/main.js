@@ -9,6 +9,9 @@ import 'quasar-extras/roboto-font'
 import 'quasar-extras/material-icons'
 import Quasar from 'quasar'
 
+// Load necessary defaults
+store.dispatch('loadStats')
+store.dispatch('loadRandomPoem')
 Vue.use(Quasar, {
   config: {}
  })

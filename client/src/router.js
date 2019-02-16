@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import UserEntry from './views/UserEntry'
-import PrimaryView from './views/PrimaryView'
-import UserIntroduction from './views/UserIntroduction'
+import UserEntry from "./views/UserEntry"
+import PrimaryView from "./views/PrimaryView"
+import UserIntroduction from "./views/UserIntroduction"
+import Statistics from "./views/Statistics"
 
 Vue.use(VueRouter)
 
@@ -29,6 +30,12 @@ export default new VueRouter({
       path: "/introduction",
       name: "introduction",
       component: UserIntroduction
+    },
+    {
+      path: "/stats",
+      name: "stats",
+      component: Statistics
+
     }
   ]
 })

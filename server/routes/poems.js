@@ -25,6 +25,43 @@ module.exports = ({router}) => {
     ctx.body = await app.poems.aggregate([{$sample: {size: 1}}])
   })
 
+  // Return Raccoon statistics in an object
+  router.get('/stats', async (ctx) => {
+    const mostLikedIDs = await raccoon.mostLiked()
+    const mostDislikedIDs = await raccoon.mostDisliked()
+    const bestRatedIDs = await raccoon.bestRated()
+    const worstRatedIDs = await raccoon.worstRated()
+    let mostLikedArray = await mostLikedIDs.map(async(id) => {
+      return await app.poems.findOne({_id: ObjectId(id)})
+    })
+    let mostDislikedArray = await mostDislikedIDs.map(async (id) => {
+      return await app.poems.findOne({_id: ObjectId(id)})
+    })
+    let bestRatedArray = await bestRatedIDs.map(async (id) => {
+      return await app.poems.findOne({_id: ObjectId(id)})
+    })
+    let worstRatedArray = await worstRatedIDs.map(async (id) => {
+      return await app.poems.findOne({_id: ObjectId(id)})
+    })
+    // When using async maps, you must wait for all promises to resolve
+    // Only return non-null and non-empty objects
+    mostLikedArray = (await Promise.all(mostLikedArray)).filter(poem => {
+      return (poem != null && Object.keys(poem).length !== 0)})
+    mostDislikedArray = (await Promise.all(mostDislikedArray)).filter(poem => {
+      return (poem != null && Object.keys(poem).length !== 0)})
+    bestRatedArray = (await Promise.all(bestRatedArray)).filter(poem => {
+      return (poem != null && Object.keys(poem).length !== 0)})
+    worstRatedArray = (await Promise.all(worstRatedArray)).filter(poem => {
+      return (poem != null && Object.keys(poem).length !== 0)})
+    let statsObject = {
+      mostLiked: mostLikedArray,
+      mostDisliked: mostDislikedArray,
+      bestRated: bestRatedArray,
+      worstRated: worstRatedArray,
+    }
+    ctx.body = statsObject
+  })
+
   // Like poem - Expects the id of the user and the id of the poem
   router.post('/like', async(ctx) => {
     const { username, poemID } = ctx.request.body
