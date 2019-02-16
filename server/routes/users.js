@@ -1,9 +1,11 @@
-const bcrypt = require('bcrypt')
-const Koa = require('koa')
+const bcrypt = require('bcrypt')          // Password Encryption
+const Koa = require('koa')                // Node Framework
+const request = require('request')        // For Captcha Verification
+const {ObjectId} = require('mongodb')     // MongoDB Access -- casts string IDs to mongo-friendly ids
+
 const app = new Koa()
-const request = require('request')
-const {ObjectId} = require('mongodb')
 require('../mongo')(app)
+
 module.exports = ({router}) => {
 
   // Create a survey user given sessionID and recaptcha token
@@ -188,7 +190,7 @@ module.exports = ({router}) => {
     }
   })
 
-  // Update user
+  // Update user - Expects a complete updatedUser object (password excluded)
   router.put('/update', async (ctx) => {
     // Create a copy of the sent object
     let updatedUser = JSON.parse(JSON.stringify(ctx.request.body))
