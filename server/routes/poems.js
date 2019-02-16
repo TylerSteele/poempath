@@ -33,26 +33,24 @@ module.exports = ({router}) => {
       if(poemID){
         await raccoon.liked(username, poemID).then(async () => {
           await raccoon.recommendFor(username, SUGGESTION_RANGE).then(async (results) => {
-            console.log(results)
             // If there are not any recommended poems
             if(results.length === 0){
               // Return a random one
               ctx.body = await app.poems.aggregate([{$sample: {size: 1}}])
               ctx.status = 200
             } else {
-              let nextPoemIndex = getRandomInt(0, results.length)
-              console.log(nextPoemIndex)
+              let nextPoemIndex = getRandomInt(0, results.length - 1)
               ctx.body = await app.poems.findOne({_id: ObjectId(results[nextPoemIndex])})
+              console.log('POEM RECOMMENDED!')
               ctx.status = 200
             }
-          }).catch((error) => {
+          }).catch(async (error) => {
             console.log('Raccoon error: ' + error)
-            ctx.body = error
+            // If there is an error, gracefully degrade to random poem
+            ctx.body = await app.poems.aggregate([{$sample: {size: 1}}])
             ctx.status = 500
           })
         })
-        //ctx.body = {message: 'likeFailed'}
-        //ctx.status = 500
       } else {
         ctx.body = {message: 'poemIDRequired'}
         ctx.status = 422
@@ -61,7 +59,6 @@ module.exports = ({router}) => {
       ctx.body = {message: 'usernameRequired'}
       ctx.status = 422
     }
-    console.log('complete')
   })
 
 
@@ -79,9 +76,9 @@ module.exports = ({router}) => {
               ctx.body = await app.poems.aggregate([{$sample: {size: 1}}])
               ctx.status = 200
             } else {
-              let nextPoemIndex = getRandomInt(0, results.length)
-              console.log(nextPoemIndex)
+              let nextPoemIndex = getRandomInt(0, results.length - 1)
               ctx.body = await app.poems.findOne({_id: ObjectId(results[nextPoemIndex])})
+              console.log('POEM RECOMMENDED!')
               ctx.status = 200
             }
           }).catch(async (error) => {

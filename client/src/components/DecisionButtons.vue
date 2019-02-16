@@ -29,8 +29,7 @@
         } else {
           updatedUser.likedPoems = [this.currentPoem]
         }
-        this.$store.dispatch('updateUser', updatedUser)
-        this.$store.dispatch('loadCurrentPoem')
+        this.$store.dispatch('ratePoem', [this.currentUser.username, 'like'])
         window.scrollTo(0, 0)
       },
       skipAlert() {
@@ -51,8 +50,7 @@
         } else {
           updatedUser.dislikedPoems = [this.currentPoem]
         }
-        this.$store.dispatch('updateUser', updatedUser)
-        this.$store.dispatch('loadCurrentPoem')
+        this.$store.dispatch('ratePoem', [this.currentUser.username, 'dislike'])
         window.scrollTo(0, 0)
       }
 

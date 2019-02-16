@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueX from 'vuex'
-import {UserAPI} from './services/api/UserAPI'
+import { UserAPI } from './services/api/UserAPI'
 import { PoetryAPI } from './services/api/PoetryAPI'
 
 Vue.use(VueX)
@@ -40,7 +40,7 @@ export default new VueX.Store({
       // API returns an array of length 1 (depends on the route, may need to change
       let newPoemArray = await PoetryAPI.getPoem()
         .catch(err => console.log(err))
-      if(newPoemArray.length === 0) {
+      if (newPoemArray.length === 0) {
         console.log('No poems available')
         commit('SET_CURRENT_POEM', {title: 'No poetry available', author: 'Sorry for the inconvenience', text: ['']})
         commit('SET_IS_LOADING', false)
@@ -56,6 +56,24 @@ export default new VueX.Store({
         .catch(err => console.log(err))
       commit('SET_CURRENT_USER', newUser.data)
       commit('SET_IS_LOADING', false)
+    },
+    async ratePoem({state, commit}, ratingArray) {
+      commit('SET_IS_LOADING', true)
+      let newPoem = await PoetryAPI.ratePoem(ratingArray[0], state.currentPoem._id, ratingArray[1])
+      console.log(newPoem)
+      if (Object.keys(newPoem).length === 0) {
+        console.log('No poems available')
+        commit('SET_CURRENT_POEM', {title: 'No poetry available', author: 'Sorry for the inconvenience', text: ['']})
+        commit('SET_IS_LOADING', false)
+      } else {
+        if(Array.isArray(newPoem)){
+          // If the response is a "random poem" arrays
+          commit('SET_CURRENT_POEM', newPoem[0])
+        } else {
+          commit('SET_CURRENT_POEM', newPoem)
+        }
+        commit('SET_IS_LOADING', false)
+      }
     }
   }
 })
