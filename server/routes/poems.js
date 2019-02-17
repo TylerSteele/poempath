@@ -10,6 +10,9 @@ require('../mongo')(app)
 // Lower number means more accurate and less variety
 const SUGGESTION_RANGE = 8
 
+// How many elements ot return for each stats list (most liked... etc)
+const MAX_RANKINGS = 15
+
 // Random number generator for grabbing the next poem
 function getRandomInt(min, max) {
   min = Math.ceil(min);
@@ -31,7 +34,7 @@ module.exports = ({router}) => {
     const mostDislikedIDs = await raccoon.mostDisliked()
     const bestRatedIDs = await raccoon.bestRated()
     const worstRatedIDs = await raccoon.worstRated()
-    let mostLikedArray = await Promise.all(mostLikedIDs.map(async (id) => {
+    let mostLikedArray = await Promise.all(mostLikedIDs.slice(0, MAX_RANKINGS).map(async (id) => {
       let statPoem = await app.poems.findOne({_id: ObjectId(id)})
       if (statPoem != null && Object.keys(statPoem) !== 0) {
         statPoem.numberOfLikes = await raccoon.likedCount(statPoem._id)
@@ -43,7 +46,7 @@ module.exports = ({router}) => {
     mostLikedArray = mostLikedArray.filter(poem => {
       return (poem != null && Object.keys(poem).length !== 0)
     })
-    let mostDislikedArray = await Promise.all(mostDislikedIDs.map(async (id) => {
+    let mostDislikedArray = await Promise.all(mostDislikedIDs.slice(0, MAX_RANKINGS).map(async (id) => {
         let statPoem = await app.poems.findOne({_id: ObjectId(id)})
       if (statPoem != null && Object.keys(statPoem) !== 0) {
         statPoem.numberOfLikes = await raccoon.likedCount(statPoem._id)
@@ -57,7 +60,7 @@ module.exports = ({router}) => {
       return (poem != null && Object.keys(poem).length !== 0)
     })
 
-    let worstRatedArray = await Promise.all(worstRatedIDs.map(async (id) => {
+    let worstRatedArray = await Promise.all(worstRatedIDs.slice(0, MAX_RANKINGS).map(async (id) => {
       let statPoem = await app.poems.findOne({_id: ObjectId(id)})
       if (statPoem != null && Object.keys(statPoem) !== 0) {
         statPoem.numberOfLikes = await raccoon.likedCount(statPoem._id)
@@ -69,7 +72,7 @@ module.exports = ({router}) => {
       return (poem != null && Object.keys(poem).length !== 0)
     })
 
-    let bestRatedArray = await Promise.all(bestRatedIDs.map(async (id) => {
+    let bestRatedArray = await Promise.all(bestRatedIDs.slice(0, MAX_RANKINGS).map(async (id) => {
       let statPoem = await app.poems.findOne({_id: ObjectId(id)})
       if (statPoem != null && Object.keys(statPoem) !== 0) {
         statPoem.numberOfLikes = await raccoon.likedCount(statPoem._id)
@@ -160,6 +163,25 @@ module.exports = ({router}) => {
       ctx.body = {message: 'usernameRequired'}
       ctx.status = 422
     }
+  })
+
+  const fs=require('fs');
+  const data=fs.readFileSync('exportUsers.json', 'utf8');
+  const users=JSON.parse(data);
+
+  router.post('/testData', async () => {
+    users.forEach(user => {
+      user.likedPoems.forEach(async poem => {
+        let currentPoem = await app.poems.findOne({title: poem.title})
+        raccoon.liked(user._id['$oid'], currentPoem._id.toString())
+        console.log('like')
+      })
+      user.dislikedPoems.forEach(async poem => {
+        let currentPoem = await app.poems.findOne({title: poem.title})
+        raccoon.disliked(user._id['$oid'], currentPoem._id.toString())
+        console.log('dislike')
+      })
+    })
   })
 }
 
