@@ -1,9 +1,12 @@
 <template>
   <q-card class="card">
-    <div class="cardTitle">{{heading}}</div>
+    <div class="cardTitle">{{heading}}<i class="material-icons cardIcon">
+      {{ icon }}
+    </i></div>
     <ol>
       <li v-for="item in list" :key="item._id">
-        <q-collapsible class="poemTitle" :label="item.title + item.numberOfLikes + item.numberOfDislikes">
+        <q-collapsible class="poemTitle" :label="item.title" :sublabel="item.numberOfLikes + ' like | ' +
+        item.numberOfDislikes + ' dislike'">
           <div class="authorTitle">By: {{ item.author }}</div>
           <ul>
             <li v-for="(value, index) in item.text" :key="index">
@@ -24,7 +27,8 @@
     },
     props: {
       heading: String,
-      list: Array
+      list: Array,
+      icon: String
     }
   }
 </script>
@@ -47,9 +51,8 @@
   .cardTitle
     font-weight bold
     margin-bottom 2rem
+    height 2rem
     font-size 2rem
-    @media only screen and (orientation portrait)
-      font-size 1rem
 
   .authorTitle
     margin-bottom .5em
@@ -66,4 +69,7 @@
     @media only screen and (orientation portrait)
       font-size 1rem
 
+  .cardIcon
+    float right
+    font-size 2rem
 </style>

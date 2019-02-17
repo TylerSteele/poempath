@@ -1,9 +1,9 @@
 <template>
   <div>
-    <PoemList v-bind:heading="'Best Rated'" v-bind:list="stats.bestRated"/>
-    <PoemList v-bind:heading="'Worst Rated'" v-bind:list="stats.worstRated"/>
-    <PoemList v-bind:heading="'Most Liked'" v-bind:list="stats.mostLiked"/>
-    <PoemList v-bind:heading="'Most Disliked'" v-bind:list="stats.mostDisliked"/>
+    <PoemList v-bind:heading="'Best Rated'" v-bind:icon="'trending_up'" v-bind:list="stats.bestRated"/>
+    <PoemList v-bind:heading="'Worst Rated'" v-bind:icon="'trending_down'" v-bind:list="stats.worstRated"/>
+    <PoemList v-bind:heading="'Most Liked'" v-bind:icon="'thumb_up'" v-bind:list="stats.mostLiked"/>
+    <PoemList v-bind:heading="'Most Disliked'" v-bind:icon="'thumb_down'" v-bind:list="stats.mostDisliked"/>
   </div>
 </template>
 
