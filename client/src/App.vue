@@ -23,13 +23,9 @@
     </q-layout-header>
 
     <q-page-container style="padding: 0">
-      <transition
-              appear
-              enter-active-class="animated fadeIn"
-              leave-active-class="animated fadeOut"
-      >
-      <router-view @loggedIn="setUserStatus" :poem="currentPoem"/>
-      </transition>
+        <div v-touch-swipe.left="reject" v-touch-swipe.right="approve">
+          <router-view @loggedIn="setUserStatus" :poem="currentPoem" :user="currentUser"/>
+        </div>
     </q-page-container>
   </q-layout>
 </template>
@@ -81,6 +77,20 @@
         // If logging out, clear the state
         if (!isLoggedIn) {
           this.$store.dispatch('loadCurrentUser', '')
+        }
+      },
+      approve() {
+        if(this.loggedIn && this.$route.name === 'home'){
+          console.log('Approve')
+          this.$store.dispatch('ratePoem', [this.currentUser.username, 'like'])
+          window.scrollTo(0, 0)
+        }
+      },
+      reject() {
+        if(this.loggedIn && this.$route.name === 'home'){
+          console.log('Reject')
+          this.$store.dispatch('ratePoem', [this.currentUser.username, 'dislike'])
+          window.scrollTo(0, 0)
         }
       }
     },
