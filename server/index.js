@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const Koa = require('koa')
 const json = require('koa-json')
 const logger = require('koa-logger')
