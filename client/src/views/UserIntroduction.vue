@@ -2,24 +2,24 @@
   <div>
     <q-card class="card">
       <div class="cardTitle">Welcome to poempath</div>
-      <p>You will be presented with poetry and asked for your opinion on each poem.<br><br>
+      <div>You will be presented with poetry and asked for your opinion on each poem.<br><br>
         If you did not enjoy the poem, click
-      <div class="centerContainer">
-        <q-btn class="decisionBtn" @click="rejectAlert" color="negative" icon="block" label="Not For Me"/>
-        or &nbsp;<i><b>SWIPE <i class="material-icons cardIcon">arrow_back</i> LEFT</b></i>.
+        <div class="centerContainer">
+          <q-btn class="decisionBtn" @click="rejectAlert" color="negative" icon="block" label="Not For Me"/>
+          or &nbsp;<i><b>SWIPE <i class="material-icons cardIcon">arrow_back</i> LEFT</b></i>.
+        </div>
+        <br><br>
+        If you enjoyed the poem, click
+        <div class="centerContainer">
+          <q-btn class="decisionBtn" @click="approveAlert" color="positive" icon="check_circle" label="For Me"/>
+          or &nbsp;<i><b>SWIPE <i class="material-icons cardIcon">arrow_forward</i> RIGHT</b></i>.
+        </div>
+        <br><br>
+        As you rate poems, your preferences will be compared to other those of other users, and poems similar to the
+        ones you like will be recommended to you.
+        <br><br>
+        You can disable swipe functionality in the settings dropdown menu.
       </div>
-      <br><br>
-      If you enjoyed the poem, click
-      <div class="centerContainer">
-        <q-btn class="decisionBtn" @click="approveAlert" color="positive" icon="check_circle" label="For Me"/>
-        or &nbsp;<i><b>SWIPE <i class="material-icons cardIcon">arrow_forward</i> RIGHT</b></i>.
-      </div>
-      <br><br>
-      As you rate poems, your preferences will be compared to other those of other users, and poems similar to the
-      ones you like will be recommended to you.
-      <br><br>
-      You can disable swipe functionality in the settings dropdown menu.
-      </p>
       <div class="centerContainer">
         <q-btn @click="exitIntroduction" color="secondary" label="Embark" icon="call_split"/>
       </div>
@@ -31,7 +31,7 @@
 
   export default {
     name: "UserIntroduction",
-    data: function() {
+    data: function () {
       return {
         currentNotification: null
       }
@@ -42,7 +42,7 @@
         window.scrollTo(0, 0)
       },
       approveAlert() {
-        if(this.currentNotification){
+        if (this.currentNotification) {
           this.currentNotification()
         }
         this.currentNotification = this.$q.notify({
@@ -54,7 +54,7 @@
         })
       },
       rejectAlert() {
-        if(this.currentNotification){
+        if (this.currentNotification) {
           this.currentNotification()
         }
         this.currentNotification = this.$q.notify({
@@ -76,6 +76,7 @@
     margin-left 5%
     margin-right 5%
     margin-top 10rem
+    margin-bottom 5%
     padding 2rem
     border-radius .75rem
     background-color $neutral
