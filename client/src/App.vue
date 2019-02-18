@@ -26,7 +26,7 @@
                     class="toolBarButton"
                     v-if="loggedIn"
                     v-on:click.native="logOut()"
-                    replace>Log Out
+                    >Log Out
             </q-item>
           </q-list>
         </q-btn-dropdown>
@@ -70,16 +70,7 @@
         }
       },
       currentUser() {
-        if (Object.keys(this.currentUser).length > 0) {
-          // If the current user does not have any like/dislike history
-          if (!this.currentUser.likedPoems && !this.currentUser.dislikedPoems) {
-            this.$router.replace({name: 'introduction'})
-          } else {
-            if (this.currentUser.likedPoems.length === 0 && this.currentUser.dislikedPoems.length === 0) {
-              this.$router.replace({name: 'introduction'})
-            }
-          }
-        }
+
       }
     },
     methods: {
@@ -92,7 +83,6 @@
       logIn() {
         this.swipeActive = true
         this.loggedIn = true
-        this.$router.replace({name: 'introduction'})
       },
       approve() {
         if (this.loggedIn && this.$route.name === 'home' && this.swipeActive) {
@@ -125,7 +115,7 @@
       recaptchaScript.defer = true
       document.head.appendChild(recaptchaScript)
       if (!this.loggedIn && !(this.$route.name === 'stats')) {
-        this.$router.replace({name: "welcome"})
+        this.$router.push({name: "welcome"})
       }
     }
   }

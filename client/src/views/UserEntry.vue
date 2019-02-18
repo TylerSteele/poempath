@@ -7,7 +7,7 @@
         <q-tab slot="title" name="signUpTab">Sign Up</q-tab>
       </q-tabs>
       <div class="cardContents">
-        <div class="cardTitle"><b>Welcome to the poempath</b></div>
+        <div class="cardTitle">Welcome to the poempath</div>
         <q-field :error="usernameError" :error-label="usernameErrorLabel"
                  label="User Name" :count="24">
           <q-input @focus="usernameError = false" @keyup.enter="submit"
@@ -134,7 +134,7 @@
               this.$store.dispatch('loadCurrentUser', logInUsername)
               window.scrollTo(0, 0)
               // If successful, go to the home view
-              this.$router.replace({name: "home"})
+              this.$router.push({name: "home"})
             }
             // Otherwise, inform user why log in failed
             else if (data.message === 'incorrectPassword') {
@@ -226,7 +226,7 @@
               this.$store.dispatch('loadCurrentUser', signUpUsername)
               window.scrollTo(0, 0)
               // If successful, go to the introduction view
-              this.$router.replace({name: "home"})
+              this.$router.push({name: "introduction"})
             }
             // Otherwise, inform user why log in failed
             else if (data.message === 'usernameTaken') {
@@ -301,11 +301,9 @@
   .card
     margin-left 10%
     margin-right 10%
-    margin-top 10%
+    margin-top 10rem
     border-radius .75rem
     background-color $neutral
-    @media only screen and (orientation portrait)
-      margin-top 20%
 
   .cardContents
     padding 3rem
@@ -315,8 +313,9 @@
       padding 1.5rem
 
   .cardTitle
-    margin-bottom 1rem
+    margin-bottom 2.5rem
     font-size 2rem
+    font-weight bold
 
   .logInButton
     margin-top 3%
