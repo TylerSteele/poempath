@@ -1,20 +1,18 @@
 <template>
   <div>
     <q-card class="card">
-      <h3>Welcome to poempath (Survey)</h3>
-      <p>Please read each poem that is presented. <br><br>
-        If you enjoyed the poem, click
-        <q-btn color="positive" icon="check_circle" label="For Me"/>
-        . <br><br>
+      <h3>Welcome to poempath</h3>
+      <p>You will be presented with poetry and asked for your opinion on each poem.<br><br>
         If you did not enjoy the poem, click
         <q-btn color="negative" icon="block" label="Not For Me"/>
+        or swipe left,
         . <br><br>
-        You will be shown approximately 10 poems and will be presented with a
-        confirmation of completion at the end. (Please stay to the end! The data
-        is of no use if it is incomplete.)<br><br>
-        Please refrain from retaking this survey (creating another account). You
-        will see the same poems and will negatively impact the quality of my
-        data set.
+        If you enjoyed the poem, click
+        <q-btn color="positive" icon="check_circle" label="For Me"/>
+        or swipe right.
+        . <br><br>
+        As you rate poems, your preferences will be compared to other users, and poems similar to those you have
+        liked will be recommended to you.
       </p>
       <q-btn @click="exitIntroduction" color="secondary" label="Okay"/>
     </q-card>
