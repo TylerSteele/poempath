@@ -1,12 +1,7 @@
 <template>
-  <div>
-    <div class="row">
-      <q-btn class="decisionBtn" @click="approveAlert" color="positive" icon="check_circle" label="For Me"/>
-      <q-btn class="decisionBtn" @click="rejectAlert" color="negative" icon="block" label="Not For Me"/>
-    </div>
-    <div class="row">
-      <q-btn class="skipBtn" @click="skipAlert" color="secondary" icon="broken_image" label="Skip"/>
-    </div>
+  <div class="row">
+    <q-btn class="decisionBtn" @click="approve" color="positive" icon="check_circle" label="For Me"/>
+    <q-btn class="decisionBtn" @click="reject" color="negative" icon="block" label="Not For Me"/>
   </div>
 </template>
 
@@ -22,34 +17,11 @@
       ])
     },
     methods: {
-      approveAlert() {
-        let updatedUser = this.currentUser
-        if (updatedUser.likedPoems) {
-          updatedUser.likedPoems.push(this.currentPoem)
-        } else {
-          updatedUser.likedPoems = [this.currentPoem]
-        }
+      approve() {
         this.$store.dispatch('ratePoem', [this.currentUser.username, 'like'])
         window.scrollTo(0, 0)
       },
-      skipAlert() {
-        let updatedUser = this.currentUser
-        if (updatedUser.skippedPoems) {
-          updatedUser.skippedPoems.push(this.currentPoem)
-        } else {
-          updatedUser.skippedPoems = [this.currentPoem]
-        }
-        this.$store.dispatch('updateUser', updatedUser)
-        this.$store.dispatch('loadRandomPoem')
-        window.scrollTo(0, 0)
-      },
-      rejectAlert() {
-        let updatedUser = this.currentUser
-        if (updatedUser.dislikedPoems) {
-          updatedUser.dislikedPoems.push(this.currentPoem)
-        } else {
-          updatedUser.dislikedPoems = [this.currentPoem]
-        }
+      reject() {
         this.$store.dispatch('ratePoem', [this.currentUser.username, 'dislike'])
         window.scrollTo(0, 0)
       }
@@ -63,7 +35,7 @@
     font-weight bold
 
   .decisionBtn
-    margin auto auto
+    margin 3% auto 5% auto
     padding .25rem
     width 14rem
     font-size 1.5rem

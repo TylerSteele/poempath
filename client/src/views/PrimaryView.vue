@@ -18,7 +18,7 @@
     components: {DecisionButtons, PoemDisplay},
     methods: {
       mounted() {
-      },
+      }
     }
   }
 </script>
