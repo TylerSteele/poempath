@@ -27,7 +27,7 @@
                   @expired="onCaptchaExpired"
                   size="invisible"
                   hidden
-                  sitekey="6LcLvo0UAAAAABm2eK9s-uDHDU3WZnxcPH8DtbBe">
+                  sitekey="6LcSLY8UAAAAAFOG_d7LsMdQsVoMBqqNzerAJIoH">
           </vue-recaptcha>
           <div class="centerConditional">
             <q-btn
