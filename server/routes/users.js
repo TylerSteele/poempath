@@ -91,17 +91,17 @@ module.exports = ({router}) => {
           response: ctx.request.body.recaptchaToken
         }
       }
-      const captchaVerified = await request.post(verifyCaptchaOptions, function (err, response, body) {
+      let captchaVerified = true
+      await request.post(verifyCaptchaOptions, function (err, response, body) {
           if (err) {
             ctx.status = 500
             ctx.body = {message: 'captchaError'}
-            return false
+            captchaVerified = false
           } else if (!body.success) {
             ctx.status = 500
             ctx.body = {message: 'captchaFailed'}
-            return false
+            captchaVerified = false
           }
-          return true
         }
       )
       if (captchaVerified) {
@@ -153,17 +153,17 @@ module.exports = ({router}) => {
           response: ctx.request.body.recaptchaToken
         }
       }
-      const captchaVerified = await request.post(verifyCaptchaOptions, function (err, response, body) {
+      let captchaVerified = true
+      await request.post(verifyCaptchaOptions, function (err, response, body) {
           if (err) {
             ctx.status = 500
             ctx.body = {message: 'captchaError'}
-            return false
+            captchaVerified = false
           } else if (!body.success) {
             ctx.status = 500
             ctx.body = {message: 'captchaFailed'}
-            return false
+            captchaVerified = false
           }
-          return true
         }
       )
       if (captchaVerified) {
