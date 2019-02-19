@@ -1,3 +1,5 @@
+![Logo](https://poempath.com/logo.png)
+
 # [poempath.com](https://poempath.com)
 
 ![Vue](https://img.shields.io/badge/Frontend-Vue-41b883.svg)
