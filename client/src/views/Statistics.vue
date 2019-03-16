@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <PoemList v-bind:heading="'Best Rated'" v-bind:icon="'trending_up'" v-bind:list="stats.bestRated"/>
     <PoemList v-bind:heading="'Worst Rated'" v-bind:icon="'trending_down'" v-bind:list="stats.worstRated"/>
     <PoemList v-bind:heading="'Most Liked'" v-bind:icon="'thumb_up'" v-bind:list="stats.mostLiked"/>
@@ -29,5 +29,7 @@
 </script>
 
 <style lang="stylus">
+  .container
+    margin-top 10rem
 
 </style>
