@@ -20,6 +20,6 @@ Web application that displays poetry in a readable format and offers suggestions
 
 #### Back End
 
-- Lightweight, bare-bones api with Koa.js 
+- Lightweight, bare-bones api with [Koa.js](https://koajs.com/) 
 - Lightning-fast recommendations from [Recommendation Raccoon](https://github.com/guymorita/recommendationRaccoon) (it uses redis :sunglasses:)
 - Easy data access and manipulation with [MongoDB](https://www.mongodb.com/)
