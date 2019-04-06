@@ -15,7 +15,7 @@
           or &nbsp;<i><b>SWIPE <i class="material-icons cardIcon">arrow_forward</i> RIGHT</b></i>.
         </div>
         <br><br>
-        As you rate poems, your preferences will be compared to other those of other users, and poems similar to the
+        As you rate poems, your preferences will be compared to those of other users, and poems similar to the
         ones you like will be recommended to you.
         <br><br>
         You can disable swipe functionality in the settings dropdown menu.
