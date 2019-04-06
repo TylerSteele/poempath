@@ -7,7 +7,7 @@
               :inverted="$q.theme === 'ios'"
       >
         <q-toolbar-title id="appTitle">
-          <img class="logo" alt="'icon'" src="../public/logo.png"> &nbsp;poempath
+          <img class="logo" alt="'icon'" src="../assets/logo.png"> &nbsp;poempath
           <div class="userSubtitle" v-if="loggedIn" slot="subtitle">Poetry for {{currentUser.username}}
           </div>
         </q-toolbar-title>
