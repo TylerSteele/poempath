@@ -1,4 +1,4 @@
-![Logo](https://github.com/SteeleTyler/poempath/blob/master/client/public/logo.png)
+![Logo](https://github.com/SteeleTyler/poempath/blob/master/client/assets/logo.png)
 
 # [poempath.com](https://poempath.com)
 
@@ -23,3 +23,21 @@ Web application that displays poetry in a readable format and offers suggestions
 - Lightweight, bare-bones api with [Koa.js](https://koajs.com/) 
 - Lightning-fast recommendations from [Recommendation Raccoon](https://github.com/guymorita/recommendationRaccoon) (it uses redis :sunglasses:)
 - Easy data access and manipulation with [MongoDB](https://www.mongodb.com/)
+
+## Screen Cap Demo
+### Desktop 
+#### User Log In and Sign Up
+
+![Desktop Entry Image](https://github.com/SteeleTyler/poempath/blob/master/client/assets/desktop_login.png)
+
+#### User Introduction
+
+![Desktop Intro Image](https://github.com/SteeleTyler/poempath/blob/master/client/assets/desktop_intro.png)
+
+#### Poem View
+
+![Desktop Poem Image](https://github.com/SteeleTyler/poempath/blob/master/client/assets/desktop_screenshot.png)
+
+### Mobile
+
+![Mobile View](https://github.com/SteeleTyler/poempath/blob/master/client/assets/mobile_poem.png)
