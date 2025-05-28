@@ -1,6 +1,6 @@
 ![Logo](https://github.com/SteeleTyler/poempath/blob/master/client/assets/logo.png)
 
-# [poempath.com](https://poempath.com)
+# poempath
 
 ![Vue](https://img.shields.io/badge/Frontend-Vue-41b883.svg)
 ![Koa](https://img.shields.io/badge/Backend-Koa-5fd3d1.svg)
